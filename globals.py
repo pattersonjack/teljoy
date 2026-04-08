@@ -443,7 +443,7 @@ class SafetyInterlock(object):
 def UpdateConfig():
   """Load the .ini file and populate the ConfigParser object with the contents.
   """
-  lCP = ConfigParser.ConfigParser(defaults=ConfigDefaults)
+  lCP = ConfigParser.ConfigParser(defaults=ConfigDefaults, inline_comment_prefixes=(';', '#'))
   lCPfile = lCP.read(CPPATH)
   if not lCPfile:
     logger.error("None of the specified configuration files found by globals.py: %s" % (CPPATH,))

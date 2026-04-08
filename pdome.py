@@ -109,17 +109,17 @@ class Dome(object):
        If not, it sends a CR character to the controller and returns 'False'.
     """
     chars = []
-    c = 'X'
-    while c != '':
+    c = b'X'
+    while c != b'':
       c = self.ser.read(1)
       chars.append(c)
-    gots = ''.join(chars)
+    gots = b''.join(chars).decode('ascii', errors='ignore')
 
     if gots:
       self._parse_response(gots)
 
     if '?' not in gots:
-      self.ser.write(chr(13))
+      self.ser.write(b'\r')
       time.sleep(0.2)
       return False
     else:
@@ -185,21 +185,21 @@ class Dome(object):
           if self.Command == 'O':
             self.ShutterOpen = True
             self.CommandSent = True
-            self.ser.write('O' + chr(13))
+            self.ser.write(b'O\r')
           elif self.Command == 'C':
             self.ShutterOpen = False
             self.CommandSent = True
-            self.ser.write('C' + chr(13))
+            self.ser.write(b'C\r')
           elif self.Command == 'I':
             self.IsShutterOpen = None    #unknown until we receive the result
             self.CommandSent = True
-            self.ser.write('I' + chr(13))
+            self.ser.write(b'I\r')
           else:
             try:
               az = int(self.Command)
               if (az < 0) or (az > 360):
                 logger.error('Invalid command in dome command queue: %s' % self.Command)
-              self.ser.write(self.Command + chr(13))
+              self.ser.write((self.Command + '\r').encode('ascii'))
               self.CommandSent = True
             except ValueError:
               logger.error('Invalid command in dome command queue: %s' % self.Command)

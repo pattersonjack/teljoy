@@ -527,8 +527,8 @@ class ControllerTimer(object):
     self._callback = callback
     self._cancelled = False
 
-  def __cmp__(self, rhs):
-    return cmp(self._expiry_time, rhs._expiry_time)
+  def __lt__(self, rhs):
+    return self._expiry_time < rhs._expiry_time
 
 class Controller(object):
   def __init__(self, driver):

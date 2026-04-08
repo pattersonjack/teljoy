@@ -51,7 +51,7 @@ class Event(object):
 		line += "%s %s" % (self.address_kind, self.address_endpoint)
 
 		line += " | "
-		line += ' '.join(x.encode('hex') for x in self.data)
+		line += ' '.join(format(ord(x), '02x') for x in self.data)
 
 		return line
 

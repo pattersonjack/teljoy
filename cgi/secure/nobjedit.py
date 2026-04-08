@@ -4,6 +4,7 @@
 """
 
 import cgi
+import html
 import os
 import traceback
 import sys
@@ -62,7 +63,7 @@ def page(form=None):
       output.append("Error parsing 'save new object' form.\n" + nobjedithtml.trailer)
       e = traceback.format_exception(sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
       for l in e:
-        output.append((cgi.escape(l) + '<p>').replace('\n', '<br>'))
+        output.append((html.escape(l) + '<p>').replace('\n', '<br>'))
 
       return ''.join(output)
 
@@ -92,7 +93,7 @@ def page(form=None):
       output.append("Error parsing data for new object.")
       e = traceback.format_exception(sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
       for l in e:
-        output.append((cgi.escape(l) + '<p>').replace('\n', '<br>'))
+        output.append((html.escape(l) + '<p>').replace('\n', '<br>'))
       output.append(nobjedithtml.trailer)
       return ''.join(output)
 

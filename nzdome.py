@@ -94,7 +94,7 @@ class Dome(object):
     self.ser.flushInput()      # Empty dome input buffer to get most recent position
     data = self.ser.read(1)
     if data:
-      raw = ord(data) + self.EncoderOffset  # Value in range 0-255 for full circle
+      raw = data[0] + self.EncoderOffset  # Value in range 0-255 for full circle
       if raw < 0:
         raw += 256
       if raw > 255:

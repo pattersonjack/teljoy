@@ -408,19 +408,19 @@ def filtobjects(curs=None,
 
 
 def sortid(o, p):
-  return cmp(o.ObjID, p.ObjID)
+  return (o.ObjID > p.ObjID) - (o.ObjID < p.ObjID)
 
 
 def sortra(o, p):
-  return cmp(o.ObjRA, p.ObjRA)
+  return (o.ObjRA > p.ObjRA) - (o.ObjRA < p.ObjRA)
 
 
 def sortdec(o, p):
-  return cmp(o.ObjDec, p.ObjDec)
+  return (o.ObjDec > p.ObjDec) - (o.ObjDec < p.ObjDec)
 
 
 def sorttype(o, p):
-  return cmp(o.type, p.type)
+  return (o.type > p.type) - (o.type < p.type)
 
 
 # Create a database connection:

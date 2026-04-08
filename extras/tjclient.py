@@ -42,7 +42,7 @@ except IOError:
   print('Pyro4 key file not found: %s' % KEYFILE)
   hmac = ''
 
-Pyro4.config.HMAC_KEY = hmac or Pyro4.config.HMAC_KEY
+hmac_key = hmac.encode('utf-8') if hmac else None
 
 status = None
 ShutterAction = None
@@ -159,6 +159,7 @@ class TelClient(StatusObj):
 
     try:
       self.proxy = Pyro4.Proxy(DEFURL)   # Use hardwired host/port first
+      self.proxy._pyroHmacKey = hmac_key
       self.proxy.Ping()   # Check to see we can connect
       ok = True
     except Pyro4.errors.PyroError:
@@ -166,6 +167,7 @@ class TelClient(StatusObj):
       msg += "Local traceback: \n" + traceback.format_exc() + "\n"
       try:
         self.proxy = Pyro4.Proxy('PYRONAME:Teljoy')
+        self.proxy._pyroHmacKey = hmac_key
         ok = True
       except Pyro4.errors.PyroError:
         self.proxy = None

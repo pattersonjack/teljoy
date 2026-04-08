@@ -39,7 +39,7 @@ except IOError:
   logger.error('Pyro4 key file not found: %s' % KEYFILE)
   hmac = ''
 
-Pyro4.config.HMAC_KEY = hmac or Pyro4.config.HMAC_KEY
+hmac_key = hmac.encode('utf-8') if hmac else None
 
 PYROPORT = 9696
 
@@ -54,7 +54,7 @@ class Telescope(object):
     while True:
       logger.info("Starting teljoy.rpc Pyro4 server")
       try:
-        ns = Pyro4.locateNS()
+        ns = Pyro4.locateNS(hmac_key=hmac_key)
       except:
         logger.debug("Can't locate Pyro nameserver - continuing on port %d" % PYROPORT)
         ns = None
@@ -69,6 +69,7 @@ class Telescope(object):
           pyro_daemon = Pyro4.Daemon(host=Pyro4.socketutil.getInterfaceAddress(TESTHOST), port=existing.port)
         except:   # Fails if the above DNS name isn't found, eg no internet connection
           pyro_daemon = Pyro4.Daemon(port=existing.port)   # Bind to the loopback address if we can't find an external interface
+        pyro_daemon._pyroHmacKey = hmac_key
         # register the object in the daemon with the old objectId
         pyro_daemon.register(self, objectId=existing.object)
       except (AssertionError, Pyro4.errors.PyroError, socket.error):
@@ -78,6 +79,7 @@ class Telescope(object):
             pyro_daemon = Pyro4.Daemon(host=Pyro4.socketutil.getInterfaceAddress('google.com.au'), port=PYROPORT)
           except:     # Fails if the above DNS name isn't found, eg no internet connection
             pyro_daemon = Pyro4.Daemon(port=PYROPORT)     # Bind to the loopback address if we can't find an external interface
+          pyro_daemon._pyroHmacKey = hmac_key
           # register the object in the daemon and let it get a new objectId
           # also need to register in name server because it's not there yet.
           uri =  pyro_daemon.register(self, objectId='Teljoy')
