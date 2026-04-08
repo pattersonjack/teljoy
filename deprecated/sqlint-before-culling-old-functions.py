@@ -78,10 +78,10 @@ class Info:
        the identifier mismatches due to the fact that Pascal isn't case
        sensitive for identifier names.
     """
-    if name in self.__dict__.keys():
+    if name in list(self.__dict__.keys()):
       self.__dict__[name] = value
     else:
-      raise AssertionError, "Setting attribute %s=%s for the first time."
+      raise AssertionError("Setting attribute %s=%s for the first time.")
 
   def __getstate__(self):
     """Can't pickle the __setattr__ function when saving state
@@ -115,10 +115,10 @@ class TJboxrec:
        the identifier mismatches due to the fact that Pascal isn't case
        sensitive for identifier names.
     """
-    if name in self.__dict__.keys():
+    if name in list(self.__dict__.keys()):
       self.__dict__[name] = value
     else:
-      raise AssertionError, "Setting attribute %s=%s for the first time."
+      raise AssertionError("Setting attribute %s=%s for the first time.")
 
   def __getstate__(self):
     """Can't pickle the __setattr__ function when saving state
@@ -156,10 +156,10 @@ class Candidate:
        the identifier mismatches due to the fact that Pascal isn't case
        sensitive for identifier names.
     """
-    if name in self.__dict__.keys():
+    if name in list(self.__dict__.keys()):
       self.__dict__[name] = value
     else:
-      raise AssertionError, "Setting attribute %s=%s for the first time."
+      raise AssertionError("Setting attribute %s=%s for the first time.")
 
   def __getstate__(self):
     """Can't pickle the __setattr__ function when saving state
@@ -371,7 +371,7 @@ def GetGalaxy(gid, ObjDec=None, db=None):
     return gal
   else:
     ids = fixup(gid)
-    if ids <> '':   #it was in fixups, and 'ids' is the PGC}
+    if ids != '':   #it was in fixups, and 'ids' is the PGC}
       return GetGalaxy(ids, ObjDec, db=db)
     else:   #It wasn't in the fixup list, check in esogals}
       qstr = ( "select RA1950,DEC1950d,Name,PGC," +
@@ -861,10 +861,10 @@ class _ValidClass:
        the identifier mismatches due to the fact that Pascal isn't case
        sensitive for identifier names.
     """
-    if name in self.__dict__.keys():
+    if name in list(self.__dict__.keys()):
       self.__dict__[name] = value
     else:
-      raise AssertionError, "Setting attribute %s=%s for the first time."
+      raise AssertionError("Setting attribute %s=%s for the first time.")
 
 
 def ReadTJbox(db=None):
@@ -974,7 +974,7 @@ def ReadTJbox(db=None):
 
   if verr:
     other.action = 'error'
-  if other.action <> 'none':
+  if other.action != 'none':
     logger.debug("sqlint.ReadTJbox: Found box - %s, %s" % (other,Pos) )
   Pos.update()
   return Pos, other

@@ -216,4 +216,3 @@ def InitServer():
   #The daemon threads will continue to spin for eternity....
 
   return True
-

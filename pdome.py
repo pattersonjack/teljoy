@@ -67,7 +67,7 @@ class Dome(object):
       self.ser = serial.Serial('/dev/ttyS%d' % DOMEPORT, baudrate=1200, stopbits=serial.STOPBITS_TWO, timeout=0.2, rtscts=False, xonxoff=False, dsrdtr=False)
     except:
       self.ser = None
-      print "Error opening serial port, no dome communication"
+      print("Error opening serial port, no dome communication")
 
   def __getstate__(self):
     """Can't pickle the __setattr__ function when saving state
@@ -97,9 +97,9 @@ class Dome(object):
       elif arg.upper() in ['C','CLOSE']:
         self.close(**kwargs)
       else:
-        print "Unknown argument: specify an azimuth in degrees, or 'open', or 'close'"
+        print("Unknown argument: specify an azimuth in degrees, or 'open', or 'close'")
     else:
-      print "Unknown argument: specify an azimuth in degrees, or 'open', or 'close'"
+      print("Unknown argument: specify an azimuth in degrees, or 'open', or 'close'")
 
   def _waitprompt(self):
     """If not busy, the dome controller will return a '?' prompt in response to a CR character.
@@ -110,7 +110,7 @@ class Dome(object):
     """
     chars = []
     c = 'X'
-    while c <> '':
+    while c != '':
       c = self.ser.read(1)
       chars.append(c)
     gots = ''.join(chars)
@@ -163,7 +163,7 @@ class Dome(object):
             if self.IsShutterOpen is None:
               logger.error("'I' command to dome controller didn't return shutter state.")
             else:
-              if self.IsShutterOpen <> self.ShutterOpen:
+              if self.IsShutterOpen != self.ShutterOpen:
                 logger.error("Shutter state from dome controller doesn't match desired shutter state. Resending command.")
                 self.queue.append(self.Command)
                 self.queue.append('I')
@@ -327,4 +327,3 @@ CP,CPfile = UpdateConfig()
 
 dome.DomeTracking = CP.getboolean('Toggles','DomeTracking')
 dome.AutoDome = CP.getboolean('Toggles','DefaultAutoDome')
-

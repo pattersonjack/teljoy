@@ -555,7 +555,7 @@ def RunQueue():
       motors.Driver = usbcon.Driver(getframe=motors.getframe, newcounters=motors.newcounters, limits=limits)
       motors.Driver.run()
     except:
-      print "controller.Controller.stop() was called with an exception:"
+      print("controller.Controller.stop() was called with an exception:")
       traceback.print_exc()
       break
     logger.info("Restarting controller.run().")

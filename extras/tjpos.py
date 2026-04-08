@@ -19,22 +19,22 @@ if errmsg:
 else:
   s = tjclient.status
   if not s.current.posviolate:    # Original RA and Dec to standard epoch are valid
-    print "ObjID:   %s" % (s.current.ObjID,)
-    print "RA:      %14.11f" % (s.current.Ra/15/3600,)   # RA stored in arcseconds, convert to hours
-    print "DEC:     %14.11f" % (s.current.Dec/3600)      # Convert form arcseconds to degrees
-    print "EPOCH:   %8.3f" % (s.current.Epoch)           # eg, 2000.0
+    print("ObjID:   %s" % (s.current.ObjID,))
+    print("RA:      %14.11f" % (s.current.Ra/15/3600,))   # RA stored in arcseconds, convert to hours
+    print("DEC:     %14.11f" % (s.current.Dec/3600))      # Convert form arcseconds to degrees
+    print("EPOCH:   %8.3f" % (s.current.Epoch))           # eg, 2000.0
   else:       # The hand-paddle has been used, or the telescope has been frozen or switched off since the last
               # jump or reset to coordinates with a valid, standard epoch.
-    print "ObjID:   "
-    print "RA:      %14.11f" % (s.current.RaC/15/3600,)   # RA stored in arcseconds, convert to hours
-    print "DEC:     %14.11f" % (s.current.DecC/3600,)     # Convert form arcseconds to degrees
-    print "EPOCH:   0.0"                                  # Here, Epoch=0 means 'Epoch of Date', ie 'now'.
+    print("ObjID:   ")
+    print("RA:      %14.11f" % (s.current.RaC/15/3600,))   # RA stored in arcseconds, convert to hours
+    print("DEC:     %14.11f" % (s.current.DecC/3600,))     # Convert form arcseconds to degrees
+    print("EPOCH:   0.0")                                  # Here, Epoch=0 means 'Epoch of Date', ie 'now'.
 
-  print "ALT:     %4.1f" % (s.current.Alt,)
-  print "AZI:     %5.1f" % (s.current.Azi,)
-  print "LST:     %14.11f" % (s.current.Time.LST,)
-  print "DomeAzi: %3d" % (s.dome.DomeAzi,)
-  print "AGsteps: %d, %d" % s.motors.guidelog
+  print("ALT:     %4.1f" % (s.current.Alt,))
+  print("AZI:     %5.1f" % (s.current.Azi,))
+  print("LST:     %14.11f" % (s.current.Time.LST,))
+  print("DomeAzi: %3d" % (s.dome.DomeAzi,))
+  print("AGsteps: %d, %d" % s.motors.guidelog)
   flags = []
   if s.current.posviolate:
     flags.append('PosViolate')
@@ -55,7 +55,7 @@ else:
     flags.append('Frozen')
   if s.motors.Autoguiding:
     flags.append('Autoguiding')
-  print "Flags:   %s" % (', '.join(flags))
+  print("Flags:   %s" % (', '.join(flags)))
   if s.limits.HWLimit:
     limits = []
     if s.limits.PowerOff:
@@ -69,8 +69,8 @@ else:
         limits.append('HORIZON')
       if s.limits.MeshLim:
         limits.append('MESH')
-    print "Limits:  HW Limit ACTIVE: [%s]" % (', '.join(limits),)
+    print("Limits:  HW Limit ACTIVE: [%s]" % (', '.join(limits),))
   else:
-    print "Limits:"
-  print "UT:      %s" % (s.current.Time.UT,)
+    print("Limits:")
+  print("UT:      %s" % (s.current.Time.UT,))
 

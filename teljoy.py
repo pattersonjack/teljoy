@@ -174,7 +174,7 @@ safety.register_startfunction('Safety Startup', function=_safety_startup, args=[
 #  release('S', paddle='C')
 
 def i():
-  print usbcon.binstring(d.inputs)
+  print(usbcon.binstring(d.inputs))
 
 if __name__ == '__main__':
   LastDome = None    # State of the dome.IsShutterOpen boolean, saved during safety shutdowns
@@ -191,4 +191,3 @@ if __name__ == '__main__':
   current = detevent.current
   c = current
   tjserver.InitServer()
-

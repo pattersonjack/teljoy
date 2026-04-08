@@ -18,20 +18,20 @@ import sys
 import Pyro4
 
 if (len(sys.argv) < 3) or sys.argv[1] in ["-h", "--h", "--help"]:
-  print "Usage: %s <EWoffset> <NSoffset>" % sys.argv[0]
-  print
-  print "Given a pair of offsets in arcseconds (of plate scale east and "
-  print "west on the sky, not RA and DEC coordinates), shift the "
-  print "telescope by that small amount."
-  print 
-  print "Offsets are positive for East and North, Negative for West and South."
-  print
-  print "Note that near the pole, a small offset in plate scale E/W "
-  print "can translate to a very large difference in the RA coordinate."
-  print 
-  print "Examples:"
-  print "%s 12.34 134.5"  % sys.argv[0]
-  print "%s 203 12" % sys.argv[0]
+  print("Usage: %s <EWoffset> <NSoffset>" % sys.argv[0])
+  print()
+  print("Given a pair of offsets in arcseconds (of plate scale east and ")
+  print("west on the sky, not RA and DEC coordinates), shift the ")
+  print("telescope by that small amount.")
+  print() 
+  print("Offsets are positive for East and North, Negative for West and South.")
+  print()
+  print("Note that near the pole, a small offset in plate scale E/W ")
+  print("can translate to a very large difference in the RA coordinate.")
+  print() 
+  print("Examples:")
+  print("%s 12.34 134.5"  % sys.argv[0])
+  print("%s 203 12" % sys.argv[0])
   sys.exit()
 
 
@@ -48,11 +48,11 @@ else:
     ew = float(sys.argv[1])
     ns = float(sys.argv[2])
   except ValueError:
-    print "Arguments must be numbers - offsets in arcseconds."
+    print("Arguments must be numbers - offsets in arcseconds.")
     sys.exit()
 
   try:
-    print tjclient.offset(ew,ns)
+    print(tjclient.offset(ew,ns))
   except:
-    print "Error communicating with Teljoy:"
-    print "".join(Pyro4.util.getPyroTraceback())
+    print("Error communicating with Teljoy:")
+    print("".join(Pyro4.util.getPyroTraceback()))

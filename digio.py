@@ -203,7 +203,7 @@ def press(dirn, paddle='F'):
     elif dirn == 'W':
       CB |= CWest
     else:
-      print "Invalid direction: %s" % dirn
+      print("Invalid direction: %s" % dirn)
       return
   elif paddle == 'F':
     if dirn == 'N':
@@ -215,10 +215,10 @@ def press(dirn, paddle='F'):
     elif dirn == 'W':
       FB |= FWest
     else:
-      print "Invalid direction: %s" % dirn
+      print("Invalid direction: %s" % dirn)
       return
   else:
-    print "Invalid paddle: %s" % paddle
+    print("Invalid paddle: %s" % paddle)
     return
   LastDirn = dirn
   LastPaddle = paddle
@@ -249,7 +249,7 @@ def release(dirn=None, paddle=None):
     elif dirn == 'W':
       CB &= ~ CWest
     else:
-      print "Invalid direction: %s" % dirn
+      print("Invalid direction: %s" % dirn)
       return
   elif paddle == 'F':
     if dirn == 'N':
@@ -261,10 +261,10 @@ def release(dirn=None, paddle=None):
     elif dirn == 'W':
       FB &= ~ FWest
     else:
-      print "Invalid direction: %s" % dirn
+      print("Invalid direction: %s" % dirn)
       return
   else:
-    print "Invalid paddle: %s" % paddle
+    print("Invalid paddle: %s" % paddle)
     return
   LastDirn = None
   LastPaddle = None

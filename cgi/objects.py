@@ -16,7 +16,7 @@ if globals.SITE == 'NZ':
   try:
     PASSWORD = open(os.path.expanduser(PWFILE), 'r').read().strip()
   except IOError:
-    print "Can't load MySQL database pasword file: %s" % PWFILE
+    print("Can't load MySQL database pasword file: %s" % PWFILE)
     PASSWORD = ''
 elif globals.SITE == 'PERTH':
   HOST = 'mysql'
@@ -98,7 +98,7 @@ class Object:
     """Change the exposure time and filter to the n'th pair in the subframes list
     """
     if (n > self.subframes) or (n > len(self.sublist) - 1):
-      print "Invalid subframe number ", n, " in object ", self.ObjID
+      print("Invalid subframe number ", n, " in object ", self.ObjID)
     else:
       self.filtname, self.exptime = self.sublist[n]
 
@@ -108,7 +108,7 @@ class Object:
     curs.execute("""update teljoy.objects set lastobs=NOW() where UPPER(ObjID)='""" + self.ObjID.upper() + "'")
 
   def display(self):
-    print '%9s:%11s %11s (%6.1f)%8s%6.5g (%5d,%5d)%8s * %d' % (self.ObjID,
+    print('%9s:%11s %11s (%6.1f)%8s%6.5g (%5d,%5d)%8s * %d' % (self.ObjID,
                                                                self.ObjRA,
                                                                self.ObjDec,
                                                                self.ObjEpoch,
@@ -116,7 +116,7 @@ class Object:
                                                                self.exptime,
                                                                self.XYpos[0], self.XYpos[1],
                                                                self.type,
-                                                               self.subframes)
+                                                               self.subframes))
 
   def __repr__(self):
     return "Object[" + self.ObjID + "]"
@@ -137,7 +137,7 @@ class Object:
     if not curs:
       curs = db.cursor()
     if self.ObjID == '':
-      print "Empty ObjID, can't save object."
+      print("Empty ObjID, can't save object.")
       return 0
     filtnames, exptimes = pls(self.sublist)
     if not curs.execute("""select * from teljoy.objects where UPPER(ObjID)='""" + self.ObjID.upper() + "'"):
@@ -148,66 +148,66 @@ class Object:
                    "'" + self.name.strip() + "', " +
                    "'" + self.ObjRA.strip() + "', " +
                    "'" + self.ObjDec.strip() + "', " +
-                   `self.ObjEpoch` + ", " +
+                   repr(self.ObjEpoch) + ", " +
                    "'" + filtnames.strip() + "', " +
                    "'" + exptimes.strip() + "', " +
-                   `self.XYpos[0]` + ", " +
-                   `self.XYpos[1]` + ", " +
+                   repr(self.XYpos[0]) + ", " +
+                   repr(self.XYpos[1]) + ", " +
                    "'" + self.type.strip() + "', " +
-                   `self.period` + ", " +
+                   repr(self.period) + ", " +
                    "'" + self.comment.strip() + "') ")
       if self.origid.upper() != self.ObjID.upper():
         if self.origid != '':
           curs.execute("""delete from teljoy.objects where UPPER(ObjID)='""" + self.origid.upper() + "'")
     else:
       if ask:
-        print "Entry " + self.ObjID + " already exists, do you want to replace it?"
+        print("Entry " + self.ObjID + " already exists, do you want to replace it?")
         ans = input("y/n (default n): ").strip().lower()[:1]
         if ans != 'y':
-          print "Object " + self.ObjID + " not overwritten."
+          print("Object " + self.ObjID + " not overwritten.")
           return 0
       else:
         if not force:
-          print "Object " + self.ObjID + " not overwritten."
+          print("Object " + self.ObjID + " not overwritten.")
           return 0
       curs.execute("""update teljoy.objects set """ +
                    "ObjID='" + self.ObjID + "', " +
                    "name='" + self.name + "', " +
                    "ObjRA='" + self.ObjRA + "', " +
                    "ObjDec='" + self.ObjDec + "', " +
-                   "ObjEpoch=" + `self.ObjEpoch` + ", " +
+                   "ObjEpoch=" + repr(self.ObjEpoch) + ", " +
                    "filtnames='" + filtnames + "', " +
                    "exptimes='" + exptimes + "', " +
-                   "XYpos_X=" + `self.XYpos[0]`+", " +
-                   "XYpos_Y=" + `self.XYpos[1]`+", " +
+                   "XYpos_X=" + repr(self.XYpos[0])+", " +
+                   "XYpos_Y=" + repr(self.XYpos[1])+", " +
                    "type='" + self.type + "', " +
-                   "period=" + `self.period` + ", " +
+                   "period=" + repr(self.period) + ", " +
                    "comment='" + self.comment + "' " +
                    "where UPPER(ObjID)='" + self.ObjID.upper() + "'")
 
     db.commit()
-    print "Object " + self.ObjID + " saved."
+    print("Object " + self.ObjID + " saved.")
     return 1
 
   def delete(self, ask=1, curs=None):
     if not curs:
       curs = db.cursor()
     if self.ObjID == '':
-      print "Empty ObjID, can't delete object."
+      print("Empty ObjID, can't delete object.")
       return 0
     curs.execute("""select * from teljoy.objects where UPPER(ObjID)='""" + self.ObjID.upper() + "'")
     if not curs.rowcount:
-      print "Object not found in database."
+      print("Object not found in database.")
       return 0
     if ask:
-      print "Entry " + self.ObjID + " already exists, do you want to replace it?"
+      print("Entry " + self.ObjID + " already exists, do you want to replace it?")
       ans = input("y/n (default n): ").strip().lower()[:1]
       if ans != 'y':
-        print "Object " + self.ObjID + " not deleted."
+        print("Object " + self.ObjID + " not deleted.")
         return 0
     curs.execute("""delete from teljoy.objects where UPPER(ObjID)='""" + self.ObjID.upper() + "'")
     db.commit()
-    print "Object " + self.ObjID + " deleted from database."
+    print("Object " + self.ObjID + " deleted from database.")
     return 1
 
 
@@ -218,7 +218,7 @@ def ZapPeriods(period=0, type='', curs=None):
   if not curs:
     curs = db.cursor()
   if type:
-    curs.execute("""update teljoy.objects set period=""" + `period` + " where type='" + type + "' and ObjID not like 'P%'")
+    curs.execute("""update teljoy.objects set period=""" + repr(period) + " where type='" + type + "' and ObjID not like 'P%'")
   db.commit()
    
 
@@ -247,7 +247,7 @@ def psl(filtnames='I', exptimes='1.0'):
         for i in range(len(filtlist)):
           sublist.append( (filtlist[i], float(exptlist[i])) )
       else:
-        print "No match between number of filts and number of exptimes in object"
+        print("No match between number of filts and number of exptimes in object")
         subframes = 1
         sublist.append( (filtlist[0], float(exptlist[0])) )
   return subframes, sublist
@@ -261,7 +261,7 @@ def pls(sublist):
   exptimes = ''
   for p in sublist:
     filtnames += p[0] + ' '
-    exptimes += `p[1]` + ' '
+    exptimes += repr(p[1]) + ' '
   return filtnames.strip(), exptimes.strip()
 
 
@@ -301,7 +301,7 @@ def filtobjects(curs=None,
       fObjRA = globals.stringsex(c['ObjRA'])
       fObjDec = globals.stringsex(c['ObjDec'])
       curs.execute('''replace into teljoy.objtemp set ObjID="''' + c['ObjID'] + '", '
-                   'fObjRA=' + `fObjRA` + ', fObjDec=' + `fObjDec` + ' ')
+                   'fObjRA=' + repr(fObjRA) + ', fObjDec=' + repr(fObjDec) + ' ')
 
   db.commit()
 

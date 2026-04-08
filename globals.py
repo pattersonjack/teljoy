@@ -366,11 +366,11 @@ class SafetyInterlock(object):
     """
     tag = random.getrandbits(31)
     with self._lock:
-      assert tag not in self._tags.keys()
+      assert tag not in list(self._tags.keys())
       self._tags[tag] = (time.time(), threading.current_thread(), comment)
       if self.Active.is_set():
         self.Active.clear()
-        for name, action in self._stopfunctions.items():
+        for name, action in list(self._stopfunctions.items()):
           try:
             logger.info("Calling safety stop function: %s" % name)
             function, args, kwargs = action
@@ -387,12 +387,12 @@ class SafetyInterlock(object):
        already been restarted, call all the start functions registered using register_startfunction().
     """
     with self._lock:
-      if tag not in self._tags.keys():
+      if tag not in list(self._tags.keys()):
         logger.error("Can't remove safety tag - invalid tag")
         return
       del self._tags[tag]
       if (not self._tags) and (not self.Active.is_set()):     # If no more tags, and the system hasn't already been started
-        for name, action in self._startfunctions.items():
+        for name, action in list(self._startfunctions.items()):
           try:
             logger.info("Calling safety restart function: %s" % name)
             function, args, kwargs = action
@@ -430,7 +430,7 @@ class SafetyInterlock(object):
       mesg.append("Safety Interlock - system STOPPED")
     if self._tags:
       mesg.append("Active safety tags:")
-      for tme, thr, com in self._tags.values():
+      for tme, thr, com in list(self._tags.values()):
         mesg.append("Tag '%s' added at %s by thread %s" % (com, time.ctime(tme), thr))
     else:
       mesg.append('No tags.')

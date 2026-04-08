@@ -97,7 +97,7 @@ def main():
 		e = Event()
 
 		e.tag = parts[0]
-		e.timestamp = long(parts[1])
+		e.timestamp = int(parts[1])
 		e.kind = parts[2]
 
 		address = parts[3].split(":")
@@ -140,7 +140,7 @@ def main():
 
 			while part_index < len(parts):
 				word = parts[part_index]
-				e.data_words.append(long(word, 16))
+				e.data_words.append(int(word, 16))
 
 				if remaining >= 1: data += chr(int(word[0:2], 16))
 				if remaining >= 2: data += chr(int(word[2:4], 16))
@@ -160,8 +160,7 @@ def main():
 			indices_by_tag[e.tag] = e.index
 			next_index += 1
 
-		print e
+		print(e)
 
 if __name__ == "__main__":
 	main()
-

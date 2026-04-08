@@ -10,12 +10,12 @@ def subdict(tplate='', vdict={}):
   """
 
   temps = tplate
-  for k in vdict.keys():
+  for k in list(vdict.keys()):
     if type(vdict[k]) == str:
       temps = temps.replace('##'+k+'##', vdict[k])
     elif type(vdict[k]) == float:            #If a float, round to two dp
       temps = temps.replace('##'+k+'##', '%6.2f' % vdict[k])
     else:                                       #Any other type, convert it to string first
-      temps = temps.replace('##'+k+'##', `vdict[k]`)
+      temps = temps.replace('##'+k+'##', repr(vdict[k]))
 
   return temps

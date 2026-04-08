@@ -124,7 +124,7 @@ class MotorControl():
      queue full.
   """
   def __init__(self):
-    print 'Initializing Global variables'
+    print('Initializing Global variables')
     self.RA_up = 0              #number of 50ms ticks to ramp motor to max velocity for slew
     self.RA_down = 0            #number of 50ms ticks to ramp motor down after slew
     self.DEC_up = 0             #number of 50ms ticks to ramp motor to max velocity for slew
@@ -164,7 +164,7 @@ class MotorControl():
     self.CutFrac = 0
     self.ticks = 0
     self.Frozen = False
-    print 'finished global vars'
+    print('finished global vars')
     
   def CalcPaddle(self):
     """The paddle code in the 'Determine Event' loop communicates with the motor control object by 
@@ -360,10 +360,10 @@ class MotorControl():
 
             #end of if teljump - else clause
 
-          if RA_hold <> 0:
+          if RA_hold != 0:
             send_RA += RA_hold
             RA_hold = 0
-          if DEC_hold <> 0:
+          if DEC_hold != 0:
             send_DEC += DEC_hold
             DEC_hold = 0
 
@@ -400,13 +400,13 @@ class MotorControl():
           #if the sign of either send_RA or send_DEC has changed since the last
           # pulse add int_** to frac_** and reset int_** to 0.0 
           sign_RA = (int_RA >= 0)
-          if sign_RA <> old_sign_RA:     #Set an initial value for old_sign_RA
+          if sign_RA != old_sign_RA:     #Set an initial value for old_sign_RA
             old_sign_RA = sign_RA
             RA_hold = int_RA             #include this velocity in the next pulse
             int_RA = 0
 
           sign_DEC = (int_DEC >= 0)
-          if sign_DEC <> old_sign_DEC:   #as for old_sign_RA
+          if sign_DEC != old_sign_DEC:   #as for old_sign_RA
             old_sign_DEC = sign_DEC
             DEC_hold = int_DEC
             int_DEC = 0

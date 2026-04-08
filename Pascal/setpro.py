@@ -108,7 +108,7 @@ def setprof (delRA,delDEC,Rate):
   #Determine motor speeds and displacements.
   #If teljump or paddle flags are true, loop until they go false.
   while (Teljump or Paddle_start_RA or Paddle_stop_RA or Paddle_start_DEC or Paddle_stop_DEC):
-    print 'Waiting for telescope to stop moving:'
+    print('Waiting for telescope to stop moving:')
     time.sleep(1)
 
   #calculate max_vel.
@@ -246,7 +246,7 @@ def setprof (delRA,delDEC,Rate):
   #inform the interupt that we have a telescope jump to execute
   #Check the paddles arent in use
   while Teljump or Paddle_start_RA or Paddle_stop_RA or Paddle_start_DEC or Paddle_stop_DEC:
-    print ','
+    print(',')
 
   if (not finish_RA or not finish_DEC):
     Teljump = True
@@ -278,7 +278,7 @@ def start_motor(which_motor, paddle_max_vel):
   Moving = True   #signal telescope in motion
   #Test that to see if the telescope is in jump mode
   while teljump:
-    print 'Waiting for the telescope jump to end.'
+    print('Waiting for the telescope jump to end.')
     time.sleep(1)
   if which_motor: #Is the RA axis stationary?
     while (Paddle_start_RA or Paddle_stop_RA):
@@ -346,11 +346,11 @@ def resetPC23():
      This Procedure resets the PC23 card. The card is is assumed to be
      running in Time Data(TD) mode.
   """
-  print 'Starting resetPC23'
-  print 'Finished initialization of the board'
-  print 'About to Kickstart!'
+  print('Starting resetPC23')
+  print('Finished initialization of the board')
+  print('About to Kickstart!')
   pc23int.KickStart()           #Set up axes in streaming mode, send first data
-  print 'wheeee!!!!'
+  print('wheeee!!!!')
 
 
 

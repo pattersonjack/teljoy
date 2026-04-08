@@ -135,7 +135,7 @@ class Driver(controller.Driver):
     self._getframe = getframe
     self._newcounters = newcounters
     self.frame_number = 0
-    self.inputs = 0L
+    self.inputs = 0
     self.configuration = None
     self.running = False
     self.exception = None
@@ -162,7 +162,7 @@ class Driver(controller.Driver):
     logger.info("Queue Capacity: %s" % (self.host.mc_frames_capacity,))
 
     logger.info("* Initial Run State:")
-    logger.info(`state_details`)
+    logger.info(repr(state_details))
 
     logger.debug('acq in initialise():')
     self.lock.acquire()   # Keep other threads grubby hands away while we configure the controller
@@ -190,7 +190,7 @@ class Driver(controller.Driver):
     if details is not None:
       if details.exception in controller.clearable_exceptions:
         logger.info("* Clearing Exception:")
-        logger.info(`details`)
+        logger.info(repr(details))
 
         # Exceptions should never be cleared without user interaction; in this
         # example, however, they are cleared on initialisation:
@@ -442,7 +442,7 @@ class Driver(controller.Driver):
        it to stop.
     """
     logger.info("* Run State Change:")
-    logger.info(`details`)
+    logger.info(repr(details))
 
     if details.state == controller.TC_STATE_STOPPING:
       logger.info('Hardware shutdown in progress, telescope decelerating.')

@@ -97,7 +97,7 @@ class EventLoop(object):
   def runall(self):
     """Run all functions once, catching any errors.
     """
-    for name, function in self.Functions.items():
+    for name, function in list(self.Functions.items()):
       try:
         function()
       except:

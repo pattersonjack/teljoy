@@ -60,7 +60,7 @@ def page(form=None):
       return ''.join(output)
     except:
       output.append("Error parsing 'save new object' form.\n" + nobjedithtml.trailer)
-      e = traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback)
+      e = traceback.format_exception(sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
       for l in e:
         output.append((cgi.escape(l) + '<p>').replace('\n', '<br>'))
 
@@ -90,7 +90,7 @@ def page(form=None):
       return ''.join(output)
     except ValueError:
       output.append("Error parsing data for new object.")
-      e = traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback)
+      e = traceback.format_exception(sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
       for l in e:
         output.append((cgi.escape(l) + '<p>').replace('\n', '<br>'))
       output.append(nobjedithtml.trailer)

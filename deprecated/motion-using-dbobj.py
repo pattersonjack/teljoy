@@ -163,10 +163,10 @@ class LimitStatus(dbobj.dbObject):
        the identifier mismatches due to the fact that Pascal isn't case
        sensitive for identifier names.
     """
-    if name in self.__dict__.keys():
+    if name in list(self.__dict__.keys()):
       self.__dict__[name] = value
     else:
-      raise AssertionError, "Setting attribute %s=%s for the first time."
+      raise AssertionError("Setting attribute %s=%s for the first time.")
 
   def __getstate__(self):
     """Can't pickle the __setattr__ function when saving state
@@ -185,7 +185,7 @@ class LimitStatus(dbobj.dbObject):
     if (not self.OldLim) and (self.HWLimit):
       motors.Frozen = True
       self.LimitOnTime = time.time()
-      self.LimitOffTime = sys.maxint
+      self.LimitOffTime = sys.maxsize
       self.OldLim = True
     if ( (not self.PowerOff) and (not self.HorizLim) and (not self.MeshLim) and
          (not motors.moving) and (not self.EastLim) and (not self.WestLim) and self.HWLimit ):
@@ -254,10 +254,10 @@ class MotorControl():
        the identifier mismatches due to the fact that Pascal isn't case
        sensitive for identifier names.
     """
-    if name in self.__dict__.keys():
+    if name in list(self.__dict__.keys()):
       self.__dict__[name] = value
     else:
-      raise AssertionError, "Setting attribute %s=%s for the first time."
+      raise AssertionError("Setting attribute %s=%s for the first time.")
 
   def __getstate__(self):
     """Can't pickle the __setattr__ function when saving state
@@ -542,11 +542,11 @@ class MotorControl():
        Rate is the peak velocity in steps/second (same units as setprof)
 
     """
-    if type(which_motor) <> str:
+    if type(which_motor) != str:
       logger.error("motion.MotorControl.start_motor: Use 'RA' or 'DEC' as which_motor argument")
       return True   #indicate error
     which_motor = which_motor.strip().upper()
-    if which_motor <> 'RA' and which_motor <> 'DEC':
+    if which_motor != 'RA' and which_motor != 'DEC':
       logger.error("motion.MotorControl.start_motor: Use 'RA' or 'DEC' as which_motor argument")
       return True   #indicate error
 
@@ -604,11 +604,11 @@ class MotorControl():
          Paddle_stop_RA          logical - if true then ramp the RA motor down
          Paddle_stop_DEC         as for RA
     """
-    if type(which_motor) <> str:
+    if type(which_motor) != str:
       logger.error("motion.MotorControl.stop_motor: Use 'RA' or 'DEC' as which_motor argument")
       return True   #indicate error
     which_motor = which_motor.strip().upper()
-    if which_motor <> 'RA' and which_motor <> 'DEC':
+    if which_motor != 'RA' and which_motor != 'DEC':
       logger.error("motion.MotorControl.stop_motor: Use 'RA' or 'DEC' as which_motor argument")
       return True   #indicate error
 
@@ -721,10 +721,10 @@ class MotorControl():
 
             #end of if teljump - else clause
 
-          if RA_hold <> 0:
+          if RA_hold != 0:
             send_RA += RA_hold
             RA_hold = 0
-          if DEC_hold <> 0:
+          if DEC_hold != 0:
             send_DEC += DEC_hold
             DEC_hold = 0
 
@@ -761,13 +761,13 @@ class MotorControl():
           #if the sign of either send_RA or send_DEC has changed since the last
           # pulse add int_** to frac_** and reset int_** to 0.0 
           sign_RA = (int_RA >= 0)
-          if sign_RA <> old_sign_RA:     #Set an initial value for old_sign_RA
+          if sign_RA != old_sign_RA:     #Set an initial value for old_sign_RA
             old_sign_RA = sign_RA
             RA_hold = int_RA             #include this velocity in the next pulse
             int_RA = 0
 
           sign_DEC = (int_DEC >= 0)
-          if sign_DEC <> old_sign_DEC:   #as for old_sign_RA
+          if sign_DEC != old_sign_DEC:   #as for old_sign_RA
             old_sign_DEC = sign_DEC
             DEC_hold = int_DEC
             int_DEC = 0

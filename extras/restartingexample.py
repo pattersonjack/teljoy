@@ -13,7 +13,7 @@ class Source(object):
     self.velocity = 0
     self.acceleration = 20
 
-  def next(self):
+  def __next__(self):
     # Ramp the velocity up and down:
     self.velocity += self.acceleration
 
@@ -39,7 +39,7 @@ class Driver(controller.Driver):
     time_delta = now - self.last_log_time
     self.last_log_time = now
 
-    print "(+%0.4f) %s" % (time_delta, " ".join(map(str, values)))
+    print("(+%0.4f) %s" % (time_delta, " ".join(map(str, values))))
 
   def get_expected_controller_version(self):
     return (0, 7, 1)
@@ -57,7 +57,7 @@ class Driver(controller.Driver):
     self.log("    Queue Capacity:", self.host.mc_frames_capacity)
 
     self.log("* Initial Run State:")
-    self.log(`state_details`)
+    self.log(repr(state_details))
 
     if state_details.state == controller.TC_STATE_EXCEPTION:
       d = self.host.get_exception()
@@ -76,7 +76,7 @@ class Driver(controller.Driver):
     if details is not None:
       if details.exception in controller.clearable_exceptions:
         self.log("* Clearing Exception:")
-        self.log(`details`)
+        self.log(repr(details))
 
         # Exceptions should never be cleared without user interaction; in this
         # example, however, they are cleared on initialisation:
@@ -93,7 +93,7 @@ class Driver(controller.Driver):
 
   def state_changed(self, details):
     self.log("* Run State Change:")
-    self.log(`details`)
+    self.log(repr(details))
 
     if details.state == controller.TC_STATE_EXCEPTION:
       d = self.host.get_exception()
@@ -233,7 +233,7 @@ class Driver(controller.Driver):
     d.addCallback(self._set_guider_values_completed)
 
   def _set_guider_values_completed(self, result):
-    print "* Guider Result: Frame %s, Count %s" % (result.frame, result.count)
+    print("* Guider Result: Frame %s, Count %s" % (result.frame, result.count))
 
     self.host.add_timer(random.random() * 2, self._set_guider_values)
 
@@ -292,7 +292,7 @@ class Driver(controller.Driver):
 
   def enqueue_frame_available(self, details):
     if details.frames_in_queue < 12:
-      a_steps, b_steps = source.next()
+      a_steps, b_steps = next(source)
 
       frame_number = self.host.enqueue_frame(a_steps, b_steps)
 
@@ -360,10 +360,10 @@ if __name__ == "__main__":
     try:
         controller.run(driver = driver)
     except:
-      print "controller.Controller.stop() was called with an exception:"
+      print("controller.Controller.stop() was called with an exception:")
       traceback.print_exc()
 
       break
 
-    print "controller.Controller.stop() was called with no exception, restarting."
+    print("controller.Controller.stop() was called with no exception, restarting.")
 

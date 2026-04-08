@@ -378,23 +378,23 @@ class ControllerConfiguration(object):
   def encode_gpio(self):
     self._validate()
 
-    direction = 0L
-    function = 0L
-    invert_input = 0L
-    report_input = 0L
+    direction = 0
+    function = 0
+    invert_input = 0
+    report_input = 0
 
     for i in range(64):
       if self.pins[i].direction == CONTROLLER_PIN_OUTPUT:
-        direction |= (1L << i)
+        direction |= (1 << i)
 
       if self.pins[i].function == CONTROLLER_PIN_FUNCTION_SPECIAL:
-        function |= (1L << i)
+        function |= (1 << i)
 
       if self.pins[i].invert_input:
-        invert_input |= (1L << i)
+        invert_input |= (1 << i)
 
       if self.pins[i].report_input:
-        report_input |= (1L << i)
+        report_input |= (1 << i)
 
     return struct.pack("<QQQQ", \
       direction, \
@@ -466,7 +466,7 @@ class EnqueueDetails(object):
     self.last_dequeued_frame = controller._last_dequeued_frame
 
     self.frames_in_queue = \
-      (self.last_transmitted_frame - self.last_dequeued_frame) % 0x100000000L
+      (self.last_transmitted_frame - self.last_dequeued_frame) % 0x100000000
     self.frames_queue_capacity = controller.mc_frames_capacity
 
 class ExceptionDetails(object):
@@ -550,14 +550,14 @@ class Controller(object):
     self._device_handle.claimInterface(0)
 
     # Initialise state:
-    self._last_transmitted_frame = 0xffffffffL
-    self._last_enqueued_frame = 0xffffffffL
-    self._last_dequeued_frame = 0xffffffffL
+    self._last_transmitted_frame = 0xffffffff
+    self._last_enqueued_frame = 0xffffffff
+    self._last_dequeued_frame = 0xffffffff
 
     self._enqueue_in_progress = False
 
-    self._last_inputs = 0L
-    self._last_outputs = 0L
+    self._last_inputs = 0
+    self._last_outputs = 0
     self._last_state = None
     self._last_state_details = None
     self._last_state_callback = None
@@ -1057,7 +1057,7 @@ class Controller(object):
     self._enqueue_in_progress = True
 
     self._last_transmitted_frame = \
-      (self._last_transmitted_frame + 1) % 0x100000000L
+      (self._last_transmitted_frame + 1) % 0x100000000
 
     frame_number = self._last_transmitted_frame
 
@@ -1354,4 +1354,3 @@ def run(driver, system_poller = None):
     system_poller = _patched_Poller(select.poll())
 
   instance.run(system_poller)
-

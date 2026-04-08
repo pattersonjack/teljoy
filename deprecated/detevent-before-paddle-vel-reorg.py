@@ -15,7 +15,7 @@
 import math
 import time
 import threading
-import cPickle
+import pickle
 import copy
 
 from globals import *
@@ -55,10 +55,10 @@ class PaddleStatus:
        the identifier mismatches due to the fact that Pascal isn't case
        sensitive for identifier names.
     """
-    if name in self.__dict__.keys():
+    if name in list(self.__dict__.keys()):
       self.__dict__[name] = value
     else:
-      raise AssertionError, "Setting attribute %s=%s for the first time."
+      raise AssertionError("Setting attribute %s=%s for the first time.")
 
   def __getstate__(self):
     """Can't pickle the __setattr__ function when saving state
@@ -250,7 +250,7 @@ def UpdateCurrent():
   """Update Current RA and Dec from paddle and refraction motion
   """
   #invalidate orig RA and Dec if frozen, or paddle move, or non-sidereal move}
-  if motion.motors.Frozen or (motion.motors.RA_padlog<>0) or (motion.motors.DEC_padlog<>0):
+  if motion.motors.Frozen or (motion.motors.RA_padlog!=0) or (motion.motors.DEC_padlog!=0):
     Current.posviolate = True
 
   #account for paddle and non-sid. motion, and limit encounters}
@@ -288,7 +288,7 @@ def SaveStatus():
      this first draft simply dumps values to stdout
   """
   f = open('/tmp/teljoy.status','w')
-  cPickle.dump((Current,motion.motors,pdome.status,errors,prefs),f)
+  pickle.dump((Current,motion.motors,pdome.status,errors,prefs),f)
   f.close()
 
 
@@ -297,7 +297,7 @@ def CheckDirtyPos():
   if motion.motors.PosDirty and (DirtyTime==0):
     DirtyTime = time.time()                 #just finished move}
 
-  if (DirtyTime<>0) and (time.time()-DirtyTime > prefs.WaitBeforePosUpdate) and not motion.motors.moving:
+  if (DirtyTime!=0) and (time.time()-DirtyTime > prefs.WaitBeforePosUpdate) and not motion.motors.moving:
     UpdatePosFile()
     DirtyTime = 0
     motion.motors.PosDirty = False

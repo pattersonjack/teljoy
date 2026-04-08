@@ -380,7 +380,7 @@ def GetGalaxy(gid, ObjDec=None, db=None):
     return gal
   else:
     ids = fixup(gid)
-    if ids <> '':   #it was in fixups, and 'ids' is the PGC}
+    if ids != '':   #it was in fixups, and 'ids' is the PGC}
       return GetGalaxy(ids, ObjDec, db=db)
     else:   #It wasn't in the fixup list, check in esogals}
       qstr = ( "select RA1950,DEC1950d,Name,PGC," +
@@ -885,9 +885,9 @@ def ReadTJbox(db=None):
       verr = True
   elif other.action == 'jumprd':
     if not (valid.ObjRA and valid.ObjDEC and valid.ObjEpoch):
-      print valid.ObjRA,Pos.Ra/15/3600
-      print valid.ObjDEC,Pos.Dec/3600
-      print valid.ObjEpoch,Pos.Epoch
+      print(valid.ObjRA,Pos.Ra/15/3600)
+      print(valid.ObjDEC,Pos.Dec/3600)
+      print(valid.ObjEpoch,Pos.Epoch)
       verr = True
   elif other.action == 'jumpaa':
     if not (valid.Alt and valid.Azi):
@@ -914,7 +914,7 @@ def ReadTJbox(db=None):
 
   if verr:
     other.action = 'error'
-  if other.action <> 'none':
+  if other.action != 'none':
     logger.debug("sqlint.ReadTJbox: Found box - %s, %s" % (other,Pos) )
   Pos.update()
   return Pos, other

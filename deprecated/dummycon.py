@@ -1,9 +1,9 @@
 
 import time
-import Queue
+import queue
 import threading
 import traceback
-import cPickle
+import pickle
 
 from globals import *
 
@@ -54,7 +54,7 @@ class Status:
     """Crude, but not worth anything fancier as this code won't last long.
     """
     f = open('/tmp/dummy.status','w')
-    cPickle.dump(self,f)
+    pickle.dump(self,f)
     f.close()    
     
 
@@ -129,7 +129,7 @@ def runtel():
     while True:
       try:
         res = telqueue.get(block=False)
-      except Queue.Empty:
+      except queue.Empty:
         logfile.write('Queue Empty\n')
         logfile.flush()
         logger.critical('dummycon.runtel: Queue Empty!')
@@ -172,6 +172,6 @@ def init():
 logfile = None
 status = Status()
 running = False
-telqueue = Queue.Queue()
+telqueue = queue.Queue()
 
   

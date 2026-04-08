@@ -90,10 +90,10 @@ def GetSesame(name=''):
         pass  # Bad coordinates, ignore this line
 
   if poslist:
-    print "Found positions:"
+    print("Found positions:")
     for p in poslist:
-      print "RA=%s, DEC=%s, Source=%s" % (sexstring(p[1]), sexstring(p[2]), p[0])
-    print "Using position from '%s'" % poslist[0][0]
+      print("RA=%s, DEC=%s, Source=%s" % (sexstring(p[1]), sexstring(p[2]), p[0]))
+    print("Using position from '%s'" % poslist[0][0])
     return correct.CalcPosition(ra=poslist[0][1]/15.0, dec=poslist[0][2], epoch=2000.0, objid=name)
   else:
     return None
@@ -108,24 +108,24 @@ def ParseArgs(args, kws, pclass=correct.CalcPosition):
   """
   ra, dec, epoch, objid, domepos, obj = None, None, None, None, None, None
   for n in ['ra', 'RA', 'Ra']:
-    if n in kws.keys():
+    if n in list(kws.keys()):
       ra = kws[n]
       break
   for n in ['dec', 'Dec', 'DEC']:
-    if n in kws.keys():
+    if n in list(kws.keys()):
       dec = kws[n]
       break
   for n in ['epoch', 'Epoch', 'EPOCH', 'ep', 'Ep', 'equinox', 'Equinox', 'eq', 'Eq']:
-    if n in kws.keys():
+    if n in list(kws.keys()):
       epoch = kws[n]
   for n in ['objid', 'Objid', 'ObjId', 'ObjID', 'objId', 'objID', 'id', 'Id', 'ID', 'name', 'Name']:
-    if n in kws.keys():
+    if n in list(kws.keys()):
       objid = kws[n]
   for n in ['domepos', 'Domepos', 'DomePos', 'domePos', 'DOMEPOS']:
-    if n in kws.keys():
+    if n in list(kws.keys()):
       domepos = kws[n]
   for n in ['o', 'O', 'obj', 'Obj', 'OBJ', 'pos', 'Pos', 'POS', 'position', 'Position']:
-    if n in kws.keys():
+    if n in list(kws.keys()):
       if isinstance(kws[n], correct.CalcPosition):
         obj = kws[n]
         break
@@ -186,13 +186,13 @@ def jump(*args, **kws):
 
        This function is intended to be called manually, by the user at the command line.
   """
-  if 'force' in kws.keys():
+  if 'force' in list(kws.keys()):
     force = kws['force']
   else:
     force = None
   ob = Pos(*args, **kws)
   if ob is None:
-    print "Can't parse those arguments to get a valid position"
+    print("Can't parse those arguments to get a valid position")
     return
   if not safety.Active.is_set():
     if not force:
@@ -200,10 +200,10 @@ def jump(*args, **kws):
       return
     else:
       logger.info("safety interlock FORCED, jumping telescope")
-  print "Jumping to:", ob
+  print("Jumping to:", ob)
   detevent.current.Jump(ob, force=force)
   if dome.AutoDome:
-    print "Moving dome."
+    print("Moving dome.")
     dome.move(az=dome.CalcAzi(ob))
 
 
@@ -221,9 +221,9 @@ def reset(*args, **kws):
   """
   ob = Pos(*args, **kws)
   if ob is None:
-    print "Can't parse those arguments to get a valid position"
+    print("Can't parse those arguments to get a valid position")
     return
-  print "Resetting current position to:", ob
+  print("Resetting current position to:", ob)
   detevent.current.Reset(obj=ob)
 
 
@@ -245,8 +245,8 @@ def offset(ora, odec):
   if detevent.current.Dec > 0:
     newDEC = '+' + newDEC
   lst = sexstring(detevent.current.Time.LST, sp=' ')[:5]
-  print "TPoint input data: oldRA, oldDEC, newRA, newDEC, LST"
-  print "%s   %s   %s   %s   %s" % (oldRA, oldDEC, newRA, newDEC, lst)
+  print("TPoint input data: oldRA, oldDEC, newRA, newDEC, LST")
+  print("%s   %s   %s   %s   %s" % (oldRA, oldDEC, newRA, newDEC, lst))
 
 
 Offset = offset
@@ -284,7 +284,7 @@ if SITE == 'NZ':
 
          This function is intended to be called manually, by the user at the command line.
     """
-    print "Assuming dome is due north!"
+    print("Assuming dome is due north!")
     azi = dome.getDomeAzi()
     enc = int(azi*256.0/360.0)
     enc -= dome.EncoderOffset
@@ -292,13 +292,13 @@ if SITE == 'NZ':
       enc += 256
     if enc > 255:
       enc -= 256
-    print "Raw dome encoder value = %d" % enc
+    print("Raw dome encoder value = %d" % enc)
     newoff = -enc
     if newoff > 128:
       newoff -= 256
     if newoff < -128:
       newoff += 256
-    print "Setting dome encoder offset to %d" % newoff
+    print("Setting dome encoder offset to %d" % newoff)
     dome.EncoderOffset = newoff
 
 
@@ -311,27 +311,27 @@ def shutdown():
 
        This function is intended to be called manually, by the user at the command line.
   """
-  print "About to shut down the system and close+park the dome - are you sure?"
+  print("About to shut down the system and close+park the dome - are you sure?")
   ans = input()
   if 'Y' not in ans.upper():
-    print "Aborting."
+    print("Aborting.")
     return
   if not dome.AutoDome:
-    print "Dome not in automatic mode - can't park dome or close shutter"
+    print("Dome not in automatic mode - can't park dome or close shutter")
   if SITE == 'PERTH':
     jump(CAP, force=True)
-    print "Press 'ENTER' when cap is on, to stow the telescope at zenith"
+    print("Press 'ENTER' when cap is on, to stow the telescope at zenith")
     ans = input()
     if dome.AutoDome:
       while dome.DomeInUse:
-        print "Waiting for dome to finish moving..."
+        print("Waiting for dome to finish moving...")
         time.sleep(2)
-      print "Closing dome."
+      print("Closing dome.")
       dome.close(force=True)
   jump(STOW, force=True)
   time.sleep(2)
   while motion.motors.Moving or dome.DomeInUse:
-    print "Waiting for telescope to park and dome to finish moving."
+    print("Waiting for telescope to park and dome to finish moving.")
     time.sleep(5)
   sys.exit()
 

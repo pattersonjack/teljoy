@@ -46,7 +46,7 @@ def render(v, dig=4, dp=1):
   if v is None:
     return "NULL"
   else:
-    return ('%'+`dig`+'.'+`dp`+'f') % v
+    return ('%'+repr(dig)+'.'+repr(dp)+'f') % v
 
 
 class Weather(object):
@@ -125,7 +125,7 @@ class Weather(object):
       self.clear = True
       return     # No weather sensor connection yet, in NZ
 
-    if self.rainf <> 1:  #0 is unknown, 1 is not raining, 2 is 'wet', 3 is raining.
+    if self.rainf != 1:  #0 is unknown, 1 is not raining, 2 is 'wet', 3 is raining.
       self.rain = True
     else:
       self.rain = False
@@ -185,7 +185,7 @@ class Weather(object):
     except:
       self.weathererror = "Weather database not OK, can't get current values"
     if self.lastmod > 540:
-      self.weathererror = "Weather database not updated for " + `self.lastmod` + " seconds."
+      self.weathererror = "Weather database not updated for " + repr(self.lastmod) + " seconds."
 
     self.checkweather()
 
@@ -201,7 +201,7 @@ def _background():
   try:
     status.update(b_curs)
   except:
-    print "a weather exception"
+    print("a weather exception")
 
 
 def Init():
@@ -214,7 +214,7 @@ def Init():
     db = MySQLdb.Connection(host='mysql', user='honcho', passwd='', db='misc')
     b_db = MySQLdb.Connection(host='mysql', user='honcho', passwd='', db='misc')
   except:
-    print "DANGER - no weather sensor available, disabling weather monitoring"
+    print("DANGER - no weather sensor available, disabling weather monitoring")
   status = Weather()
   status.update()
 

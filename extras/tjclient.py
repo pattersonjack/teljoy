@@ -39,7 +39,7 @@ import traceback
 try:
   hmac = open(os.path.expanduser(KEYFILE), 'r').read().strip()
 except IOError:
-  print 'Pyro4 key file not found: %s' % KEYFILE
+  print('Pyro4 key file not found: %s' % KEYFILE)
   hmac = ''
 
 Pyro4.config.HMAC_KEY = hmac or Pyro4.config.HMAC_KEY
@@ -271,13 +271,13 @@ def _background():
   try:
     status.update()
 
-    if (ShutterAction <> None) and (not status.dome.ShutterInUse) and (not status.dome.DomeInUse):
-      if status.dome.ShutterOpen <> ShutterAction:
+    if (ShutterAction != None) and (not status.dome.ShutterInUse) and (not status.dome.DomeInUse):
+      if status.dome.ShutterOpen != ShutterAction:
         dome(ShutterAction)
       else:
         ShutterAction = None
-    elif FreezeAction <> None:
-      if status.motors.Frozen <> FreezeAction:
+    elif FreezeAction != None:
+      if status.motors.Frozen != FreezeAction:
         freeze(FreezeAction)
       else:
         FreezeAction = None
@@ -285,11 +285,11 @@ def _background():
       with status.proxy:
         status.proxy.Ping()
   except KeyboardInterrupt:
-    print "a keyboard interrupt in tjclient._background()"
+    print("a keyboard interrupt in tjclient._background()")
   except Pyro4.errors.PyroError:
     msg = status.connect()
     if msg:
-      print msg
+      print(msg)
 
 
 

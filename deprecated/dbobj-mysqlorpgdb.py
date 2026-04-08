@@ -78,11 +78,11 @@ class dbObject:
     for f in curs.description:
       fields[f[0]] = (f[1],f[3])
       if f[0] not in lfields:
-        print "New field '"+f[0]+"':"+f[1]+" in database, not in class definition for " + cls._table
+        print("New field '"+f[0]+"':"+f[1]+" in database, not in class definition for " + cls._table)
         passed = False
     for f in lfields:
-      if f not in fields.keys():
-        print "Field '"+f+"' in class definition not present in database table " + cls._table
+      if f not in list(fields.keys()):
+        print("Field '"+f+"' in class definition not present in database table " + cls._table)
         passed = False
     return passed
   verifyfields = classmethod(verifyfields)
@@ -122,7 +122,7 @@ class dbObject:
       self.empty()
       self.new = True
     else:
-      if type(keyval) <> type(()):
+      if type(keyval) != type(()):
         keyval = (keyval,)
       clist = []
       for oname,dname,dval in self._attribs:
@@ -159,7 +159,7 @@ class dbObject:
     """Subclass this to, for example, return an HTML representation
        of the object.
     """
-    print self._strf % self.__dict__
+    print(self._strf % self.__dict__)
 
   def __repr__(self):
     """This is called by python itself when the object is converted
@@ -183,7 +183,7 @@ class dbObject:
       if self.__dict__[k]:
         emptykey = False
     if emptykey and (not self._serialkey):
-      print "Empty key value in self."+`self._key`+", can't save object."
+      print("Empty key value in self."+repr(self._key)+", can't save object.")
       return 0
 
     new = False
@@ -224,14 +224,14 @@ class dbObject:
 #          curs.execute("delete from "+self._table+" where "+self._key[1]+"='"+self.origkey+"'")
     else:
       if ask:
-        print "Object already exists, do you want to replace it?"
-        ans=raw_input("y/n (default n): ").strip().lower()[:1]
-        if ans<>'y':
-          print "Object not overwritten."
+        print("Object already exists, do you want to replace it?")
+        ans=input("y/n (default n): ").strip().lower()[:1]
+        if ans!='y':
+          print("Object not overwritten.")
           return 0
       else:
         if not force:
-          print "Object <%s> with key=%s exists and force=0; object not overwritten." % (self.__class__, klist)
+          print("Object <%s> with key=%s exists and force=0; object not overwritten." % (self.__class__, klist))
           return 0
       clist = []
       for oname,dname,dval in self._attribs:
@@ -259,7 +259,7 @@ class dbObject:
     if commit:
       db.commit()
     if verbose:
-      print "Object <%s> saved." % self.__class__
+      print("Object <%s> saved." % self.__class__)
     return 1
 
 
@@ -272,7 +272,7 @@ class dbObject:
       if self.__dict__[k]:
         emptykey = False
     if emptykey:
-      print "Empty key value in self."+`self._key`+", can't delete object."
+      print("Empty key value in self."+repr(self._key)+", can't delete object.")
       return 0
     klist = []
     for k in self._key:
@@ -282,13 +282,13 @@ class dbObject:
         klist.append(" ("+self._nmap[k]+"="+str(self.__dict__[k])+") ")
     curs.execute("select * from " + self._table + " where " + " and ".join(klist))
     if not curs.rowcount:
-      print "Object not found in database."
+      print("Object not found in database.")
       return 0
     if ask:
-      print "Are you sure you want to delete object?"
-      ans=raw_input("y/n (default n): ").strip().lower()[:1]
-      if ans<>'y':
-        print "Object not deleted."
+      print("Are you sure you want to delete object?")
+      ans=input("y/n (default n): ").strip().lower()[:1]
+      if ans!='y':
+        print("Object not deleted.")
         return 0
     curs.execute("delete from " + self._table + " where " + " and ".join(klist))
     #print "Object deleted from database."
@@ -303,7 +303,7 @@ def execute(execstr='', db=None):
   if curs.description is None:
     return curs.rowcount    #We've executed an SQL command that doesn't return any rows (eg 'update')
   else:
-    return map(tuple,curs.fetchall())
+    return list(map(tuple,curs.fetchall()))
   
 
 def getdb(user=None, password=None, host=None, database=None):

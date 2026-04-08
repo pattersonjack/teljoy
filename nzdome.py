@@ -51,7 +51,7 @@ class Dome(object):
       self.ser = serial.Serial(DOMEPORT, baudrate=9600, stopbits=serial.STOPBITS_ONE, timeout=1.0, rtscts=False, xonxoff=False, dsrdtr=False)
     except:
       self.ser = None
-      print "Error opening serial port, no dome communication"
+      print("Error opening serial port, no dome communication")
 
   def __getstate__(self):
     """This object is 'pickled' when sending it over the wire via Pyro4, and we only want to pickle attributes,
@@ -82,9 +82,9 @@ class Dome(object):
       elif arg.upper() in ['C', 'CLOSE']:
         self.close()
       else:
-        print "Unknown argument: specify an azimuth in degrees, or 'open', or 'close'"
+        print("Unknown argument: specify an azimuth in degrees, or 'open', or 'close'")
     else:
-      print "Unknown argument: specify an azimuth in degrees, or 'open', or 'close'"
+      print("Unknown argument: specify an azimuth in degrees, or 'open', or 'close'")
 
   def getDomeAzi(self):
     """Grab encoder value from the serial power (a single byte, 0-255), and convert to
