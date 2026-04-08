@@ -1,0 +1,7 @@
+ephem==4.2
+libusb1==3.3.1
+mysqlclient==2.2.4
+Pyro4==4.82
+pyserial==3.5
+serpent==1.41
+Twisted==24.11.0
