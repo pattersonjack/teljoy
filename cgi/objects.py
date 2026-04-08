@@ -14,7 +14,7 @@ USER = 'honcho'
 if globals.SITE == 'NZ':
   HOST = 'localhost'
   try:
-    PASSWORD = file(os.path.expanduser(PWFILE), 'r').read().strip()
+    PASSWORD = open(os.path.expanduser(PWFILE), 'r').read().strip()
   except IOError:
     print "Can't load MySQL database pasword file: %s" % PWFILE
     PASSWORD = ''
@@ -162,7 +162,7 @@ class Object:
     else:
       if ask:
         print "Entry " + self.ObjID + " already exists, do you want to replace it?"
-        ans = raw_input("y/n (default n): ").strip().lower()[:1]
+        ans = input("y/n (default n): ").strip().lower()[:1]
         if ans != 'y':
           print "Object " + self.ObjID + " not overwritten."
           return 0
@@ -201,7 +201,7 @@ class Object:
       return 0
     if ask:
       print "Entry " + self.ObjID + " already exists, do you want to replace it?"
-      ans = raw_input("y/n (default n): ").strip().lower()[:1]
+      ans = input("y/n (default n): ").strip().lower()[:1]
       if ans != 'y':
         print "Object " + self.ObjID + " not deleted."
         return 0
@@ -428,4 +428,3 @@ def sorttype(o, p):
 db = MySQLdb.Connection(host=HOST, user=USER, passwd=PASSWORD,
                         db=DATABASE, cursorclass=DictCursor)
 #print 'connected'
-

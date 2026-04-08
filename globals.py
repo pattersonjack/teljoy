@@ -8,7 +8,7 @@ import threading
 import time
 import traceback
 
-import ConfigParser
+import configparser as ConfigParser
 import logging
 
 #SITE = 'PERTH'
@@ -370,7 +370,7 @@ class SafetyInterlock(object):
       self._tags[tag] = (time.time(), threading.current_thread(), comment)
       if self.Active.is_set():
         self.Active.clear()
-        for name, action in self._stopfunctions.iteritems():
+        for name, action in self._stopfunctions.items():
           try:
             logger.info("Calling safety stop function: %s" % name)
             function, args, kwargs = action
@@ -392,7 +392,7 @@ class SafetyInterlock(object):
         return
       del self._tags[tag]
       if (not self._tags) and (not self.Active.is_set()):     # If no more tags, and the system hasn't already been started
-        for name, action in self._startfunctions.iteritems():
+        for name, action in self._startfunctions.items():
           try:
             logger.info("Calling safety restart function: %s" % name)
             function, args, kwargs = action
@@ -443,7 +443,7 @@ class SafetyInterlock(object):
 def UpdateConfig():
   """Load the .ini file and populate the ConfigParser object with the contents.
   """
-  lCP = ConfigParser.SafeConfigParser(defaults=ConfigDefaults)
+  lCP = ConfigParser.ConfigParser(defaults=ConfigDefaults)
   lCPfile = lCP.read(CPPATH)
   if not lCPfile:
     logger.error("None of the specified configuration files found by globals.py: %s" % (CPPATH,))

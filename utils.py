@@ -5,7 +5,8 @@
 
 import sys
 import time
-import urllib2
+from urllib.parse import quote
+from urllib.request import urlopen
 
 from globals import *
 if SITE == 'PERTH':
@@ -66,7 +67,9 @@ def GetSesame(name=''):
      This function is intended to be called manually, by the user at the command line.
   """
   try:
-    data = urllib2.urlopen('http://cdsweb.u-strasbg.fr/cgi-bin/nph-sesame/A?%s' % urllib2.quote(name)).read()
+    data = urlopen('http://cdsweb.u-strasbg.fr/cgi-bin/nph-sesame/A?%s' % quote(name)).read()
+    if isinstance(data, bytes):
+      data = data.decode('utf-8', errors='replace')
   except IOError:
     logger.error('IO error contacting Sesame web service')
     return None
@@ -143,12 +146,12 @@ def ParseArgs(args, kws, pclass=correct.CalcPosition):
     return pclass(ra=ra, dec=dec, epoch=epoch, objid=objid, domepos=domepos)
 
   if len(args) == 0:
-    if type(objid) in [str, unicode]:
+    if isinstance(objid, str):
       return Lookup(objid=str(objid))
     else:
       return None
   elif len(args) == 1:
-    if type(args[0]) in [str, unicode]:
+    if isinstance(args[0], str):
       return Lookup(objid=str(args[0]))
     else:
       return None
@@ -309,7 +312,7 @@ def shutdown():
        This function is intended to be called manually, by the user at the command line.
   """
   print "About to shut down the system and close+park the dome - are you sure?"
-  ans = raw_input()
+  ans = input()
   if 'Y' not in ans.upper():
     print "Aborting."
     return
@@ -318,7 +321,7 @@ def shutdown():
   if SITE == 'PERTH':
     jump(CAP, force=True)
     print "Press 'ENTER' when cap is on, to stow the telescope at zenith"
-    ans = raw_input()
+    ans = input()
     if dome.AutoDome:
       while dome.DomeInUse:
         print "Waiting for dome to finish moving..."

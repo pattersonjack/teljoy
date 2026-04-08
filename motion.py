@@ -442,7 +442,7 @@ class MotorControl(object):
        guider steps taken. If the the argument is False, turn the autoguider mode off.
     """
     if on and not (self.Autoguiding):
-      self._guidelogfile = file(prefs.LogDirName + '/guider.log', 'a')
+      self._guidelogfile = open(prefs.LogDirName + '/guider.log', 'a')
       self.Driver.enable_guider()
       self._guidelogfile.write('%f ON\n' % time.time())
       self._guidelogfile.flush()

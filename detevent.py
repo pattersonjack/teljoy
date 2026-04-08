@@ -97,7 +97,7 @@ class EventLoop(object):
   def runall(self):
     """Run all functions once, catching any errors.
     """
-    for name, function in self.Functions.iteritems():
+    for name, function in self.Functions.items():
       try:
         function()
       except:
@@ -808,4 +808,3 @@ ProspLastTime = time.time()
 DBLastTime = 0
 TJboxAction = 'none'
 LastError = ""                  # Meant to contain the last reported error string - #TODO - implement in the logger handler.
-

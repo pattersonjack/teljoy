@@ -34,7 +34,7 @@ else:
 import utils
 
 try:
-  hmac = file(os.path.expanduser(KEYFILE), 'r').read().strip()
+  hmac = open(os.path.expanduser(KEYFILE), 'r').read().strip()
 except IOError:
   logger.error('Pyro4 key file not found: %s' % KEYFILE)
   hmac = ''
@@ -216,5 +216,4 @@ def InitServer():
   #The daemon threads will continue to spin for eternity....
 
   return True
-
 

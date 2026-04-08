@@ -134,7 +134,7 @@ elif SITE == 'PERTH':
   PWFILE = '~observer/teljoy.dbpass'
 
 try:
-  PASSWORD = file(os.path.expanduser(PWFILE), 'r').read().strip()
+  PASSWORD = open(os.path.expanduser(PWFILE), 'r').read().strip()
 except IOError:
   logger.error("Can't load MySQL database pasword file: %s" % PWFILE)
   PASSWORD = ''
@@ -986,4 +986,3 @@ def InitSQL():
 #the calling code doesn't pass its own database object
 gdb = InitSQL()
 SQLActive = (gdb is not None)
-

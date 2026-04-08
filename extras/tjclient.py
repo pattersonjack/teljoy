@@ -37,7 +37,7 @@ import traceback
 
 
 try:
-  hmac = file(os.path.expanduser(KEYFILE), 'r').read().strip()
+  hmac = open(os.path.expanduser(KEYFILE), 'r').read().strip()
 except IOError:
   print 'Pyro4 key file not found: %s' % KEYFILE
   hmac = ''
