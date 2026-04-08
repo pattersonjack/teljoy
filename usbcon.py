@@ -229,7 +229,7 @@ class Driver(controller.Driver):
 
     # Set the length of a frame, in cycles of the controller clock frequency. In
     # this example a frame is 50ms, or 1/20th of a second:
-    configuration.mc_frame_period = self.host.clock_frequency / 20
+    configuration.mc_frame_period = self.host.clock_frequency // 20
 
     # Set the velocity limit (in steps per frame) on each axis:
     configuration.mc_a_velocity_limit = 6000
@@ -247,8 +247,8 @@ class Driver(controller.Driver):
     # example the pulse width is 50 clock cycles, and the off time is 50 clock
     # cycles, for a 100 clock cycle period. At the maximum velocity of 6000
     # steps per frame, this would be a 120kHz square wave:
-    configuration.mc_pulse_width = self.host.clock_frequency / 240000
-    configuration.mc_pulse_minimum_off_time = self.host.clock_frequency / 240000
+    configuration.mc_pulse_width = self.host.clock_frequency // 240000
+    configuration.mc_pulse_minimum_off_time = self.host.clock_frequency // 240000
 
     # Invert all the GPIO inputs, so they are active when pulled low:
     for pin in configuration.pins[0:40]:
@@ -267,7 +267,7 @@ class Driver(controller.Driver):
     # Set the guider sample interval, in cycles of the controller clock frequency.
     # In this example, the guider is polled every 1ms, giving a maximum of
     # 100 for the guider value in each 100ms frame:
-    self.mc_guider_counter_divider = self.host.clock_frequency / 1000
+    self.mc_guider_counter_divider = self.host.clock_frequency // 1000
 
     # Each guider value is multiplied by a fractional scale factor to get
     # the number of steps. The resulting value then has a maximum applied before
@@ -601,6 +601,4 @@ class Driver(controller.Driver):
        by the run() method. If stop() had no arguments, the run() method returns normally.
     """
     controller.run(driver=self)
-
-
 

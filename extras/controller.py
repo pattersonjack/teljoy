@@ -349,7 +349,7 @@ class ControllerConfiguration(object):
       raise ControllerConfigurationException( \
         "The mc_b_shutdown_acceleration property must be greater than zero.")
 
-    if self.mc_frame_period < self._controller.clock_frequency / 100:
+    if self.mc_frame_period < self._controller.clock_frequency // 100:
       raise ControllerConfigurationException( \
         "The mc_frame_period property must be set to give a frame of at least 10 " \
         "milliseconds.")
@@ -1061,6 +1061,9 @@ class Controller(object):
 
     frame_number = self._last_transmitted_frame
 
+    a_steps = int(a_steps)
+    b_steps = int(b_steps)
+
     assert -32768 <= a_steps <= 32767
     assert -32768 <= b_steps <= 32767
 
@@ -1120,14 +1123,16 @@ class Controller(object):
     return counters
 
   def set_guider_values(self, run_at, frame_number, values):
+    run_at = int(run_at)
     reserved = 0
 
     if frame_number is None: frame_number = 0
+    frame_number = int(frame_number)
 
     buffer = struct.pack("<BBHL", run_at, reserved, reserved, frame_number)
 
     for a_steps, b_steps in values:
-      buffer += struct.pack("<hh", a_steps, b_steps)
+      buffer += struct.pack("<hh", int(a_steps), int(b_steps))
 
     if len(buffer) > 64:
       raise ControllerUsageException("Too many guider values were specified.")
