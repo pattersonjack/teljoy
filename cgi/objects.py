@@ -12,7 +12,7 @@ PWFILE = '~observer/teljoy.dbpass'
 
 USER = 'honcho'
 if globals.SITE == 'NZ':
-  HOST = 'localhost'
+  HOST = '127.0.0.1'
   try:
     PASSWORD = open(os.path.expanduser(PWFILE), 'r').read().strip()
   except IOError:

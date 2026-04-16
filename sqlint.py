@@ -127,7 +127,7 @@ import correct
 
 
 if SITE == 'NZ':
-  HOST = 'localhost'
+  HOST = '127.0.0.1'
   PWFILE = '~observer/teljoy.dbpass'
 elif SITE == 'PERTH':
   HOST = 'mysql'
