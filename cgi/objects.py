@@ -7,7 +7,7 @@ import time
 
 from teljoy import globals
 
-PWFILE = '~mjuo/teljoy.dbpass'
+PWFILE = '~observer/teljoy.dbpass'
 
 
 USER = 'honcho'

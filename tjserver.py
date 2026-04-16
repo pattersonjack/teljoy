@@ -26,7 +26,7 @@ import motion
 if SITE == 'NZ':
   import nzdome as dome
   TESTHOST = 'www.canterbury.ac.nz'   # Host to use to try and determine the externally-visible IP address for Pyro4 to bind to
-  KEYFILE = '~mjuo/teljoy.pyrokey'
+  KEYFILE = '~observer/teljoy.pyrokey'
 else:
   import pdome as dome
   TESTHOST = 'www.google.com.au'   # Host to use to try and determine the externally-visible IP address for Pyro4 to bind to

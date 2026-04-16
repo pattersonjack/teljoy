@@ -9,7 +9,7 @@ import os
 import traceback
 import sys
 
-sys.path.append('/home/mjuo')
+sys.path.append('/home/observer')
 
 import htmlutil
 from teljoy.cgi import objects

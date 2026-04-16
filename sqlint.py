@@ -128,7 +128,7 @@ import correct
 
 if SITE == 'NZ':
   HOST = 'localhost'
-  PWFILE = '~mjuo/teljoy.dbpass'
+  PWFILE = '~observer/teljoy.dbpass'
 elif SITE == 'PERTH':
   HOST = 'mysql'
   PWFILE = '~observer/teljoy.dbpass'

@@ -20,7 +20,7 @@ DEFPORT = 9696
 if SITE == 'NZ':
   DEFHOST = 'cynosure.canterbury.ac.nz'
   DEFURL = 'PYRO:Teljoy@%s:%d' % (DEFHOST, DEFPORT)
-  KEYFILE = '~mjuo/teljoy.pyrokey'
+  KEYFILE = '~observer/teljoy.pyrokey'
 elif SITE == 'PERTH':
   DEFHOST = '10.92.10.185'
   DEFURL = 'PYRO:Teljoy@%s:%d' % (DEFHOST, DEFPORT)

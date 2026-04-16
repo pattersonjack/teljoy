@@ -55,7 +55,7 @@ MOTOR_ACCEL = 50000     # 2.0 (revs/sec/sec) * 25000 (steps/rev) = 50,000 steps/
 DUMMYPADDLES = []
 
 
-CPPATH = ['/usr/local/etc/teljoy.ini', './teljoy.ini', '/home/mjuo/teljoy/teljoy.ini']    # Initialisation file path
+CPPATH = ['/usr/local/etc/teljoy.ini', './teljoy.ini', '/home/observer/teljoy/teljoy.ini']    # Initialisation file path
 
 LOGLEVEL_CONSOLE = logging.INFO     # Logging level for console messages (INFO, DEBUG, ERROR, CRITICAL, etc)
 LOGLEVEL_LOGFILE = logging.INFO      # Logging level for logfile
