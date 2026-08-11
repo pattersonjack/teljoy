@@ -43,6 +43,7 @@ hmac_key = hmac.encode('utf-8') if hmac else None
 
 PYROPORT = 9696
 
+@Pyro4.expose
 class Telescope(object):
   """Class representing RPC access to the internals of an active telescope control object.
   """
