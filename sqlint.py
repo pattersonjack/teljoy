@@ -684,14 +684,13 @@ def UpdateSQLCurrent(Here, CurrentInfo, db=None):
       db = gdb
     curs = db.cursor()
   if not CurrentInfo.posviolate:  #if telescope position is valid}
-    qstr1 = "update teljoy.%s set name='%s', ObjRA='%g', ObjDec='%g', ObjEpoch='%g', " % (
+    qstr1 = "update teljoy.%s set name=%%s, ObjRA='%g', ObjDec='%g', ObjEpoch='%g', " % (
                     DTABLE,
-                    Here.ObjID,
                     Here.Ra/(15.0*3600),
                     Here.Dec/3600.0,
                     Here.Epoch )
   else:
-    qstr1 = "update teljoy.%s set name='%s', ObjRA=NULL, ObjDec=NULL, ObjEpoch=NULL, " % (DTABLE,Here.ObjID)
+    qstr1 = "update teljoy.%s set name=%%s, ObjRA=NULL, ObjDec=NULL, ObjEpoch=NULL, " % DTABLE
 
   tmpd = Here.RaC/54000.0 - Here.Time.LST
   if tmpd < -12:
@@ -717,13 +716,12 @@ def UpdateSQLCurrent(Here, CurrentInfo, db=None):
              int(CurrentInfo.ShutterOpen),
              int(CurrentInfo.DomeTracking),
              int(CurrentInfo.Frozen) )
-  qstr4 = "RA_GuideAcc='%g', DEC_GuideAcc='%g', LastError='%s' " % (
+  qstr4 = "RA_GuideAcc='%g', DEC_GuideAcc='%g', LastError=%%s " % (
              CurrentInfo.RA_GuideAcc,
-             CurrentInfo.DEC_GuideAcc,
-             db.escape_string(CurrentInfo.LastError) )
+             CurrentInfo.DEC_GuideAcc )
   querystr = qstr1 + qstr2 + qstr3 + qstr4
   try:
-    curs.execute(querystr)
+    curs.execute(querystr, (Here.ObjID, CurrentInfo.LastError))
     db.commit()
   except dblib.Error as error:
     db.rollback()
