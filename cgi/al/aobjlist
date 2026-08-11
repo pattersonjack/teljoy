@@ -1,165 +1,235 @@
 #!/home/observer/.conda/envs/teljoy/bin/python
 
-import cgi
-from albatross import SimpleContext
-import copy
-import time
+import html
+import os
 import sys
-
-print('Content-Type: text/html')
-print()
+import time
+from urllib.parse import parse_qs, urlencode
 
 sys.path.append('/home/observer/')
 
 from teljoy.cgi import objects
 from teljoy import globals
 
-pagesize = 10
+
+PAGESIZE = 10
+FILTER_TYPES = ('ALL', 'PLANET', 'IMAGE', 'SN', 'PHOTOM', 'STORE', 'REF', 'FOCUS')
+SORT_FIELDS = ('OBJID', 'OBJRA', 'OBJDEC', 'LASTOBS')
 
 
-def pval(s, tp):
-  """Return the string interpreted either as a sexagesimal (if tp=='sex'), a float
-     (if tp=='float') or a string (if tp=='string'). Throw an exception if there's
-     any errors.
-  """
-  if tp=='sex':
-    return globals.stringsex(s)
-  elif tp=='float':
-    return float(s)
-  elif tp=='string':
-    return s.strip().upper()
+def read_form():
+  """Return the final value for each URL-encoded CGI form field."""
+  encoded = os.environ.get('QUERY_STRING', '')
+  if os.environ.get('REQUEST_METHOD', 'GET').upper() == 'POST':
+    try:
+      length = int(os.environ.get('CONTENT_LENGTH', '0'))
+    except ValueError:
+      length = 0
+    body = sys.stdin.read(max(length, 0))
+    encoded = '&'.join(part for part in (encoded, body) if part)
+
+  values = parse_qs(encoded, keep_blank_values=True, max_num_fields=100)
+  return {name: value[-1] for name, value in values.items()}
+
+
+def pval(value, value_type):
+  if value_type == 'sex':
+    return globals.stringsex(value)
+  if value_type == 'float':
+    return float(value)
+  if value_type == 'string':
+    return value.strip().upper()
+  raise ValueError('Wrong data type')
+
+
+def filter_value(form, name, value_type):
+  raw_value = form.get('n' + name, form.get(name, '')).strip()
+  if not raw_value:
+    return None, ''
+  try:
+    return pval(raw_value, value_type), raw_value
+  except (TypeError, ValueError):
+    return None, raw_value
+
+
+def escape(value):
+  if value is None:
+    return ''
+  return html.escape(str(value), quote=True)
+
+
+def page_navigation(page, pages):
+  output = ['<p>Page: &nbsp;']
+  if page > 1:
+    output.append('<button type="submit" name="cpage" value="Prev">Prev</button> &nbsp;')
+  for number in range(1, pages + 1):
+    if number == page:
+      output.append('%d &nbsp;' % number)
+    else:
+      output.append('<button type="submit" name="cpage" value="%d">%d</button> &nbsp;' %
+                    (number, number))
+  if page < pages:
+    output.append('<button type="submit" name="cpage" value="Next">Next</button> &nbsp;')
+  output.append('</p>')
+  return output
+
+
+def render_page(olist, nobjects, page, sortby, filter_text):
+  pages = nobjects // PAGESIZE + 1
+  selected_type = filter_text['filttype'].upper() or 'ALL'
+  output = [
+    '<html>',
+    '<head><title>PLAT objects database</title></head>',
+    '<body>',
+    '<h1>PLAT objects database</h1>',
+    'Go to <a href="../bncstat">Observing Status Page</a>.',
+    '<form action="aobjlist" method="POST">',
+    '<p><button type="submit" name="action" value="Redraw">Redraw</button></p>',
+    '<p>',
+    'ObjID (with wildcards): ',
+    '<input type="text" name="nfiltid" value="%s">' % escape(filter_text['filtid']),
+    ' Type: <select name="nfilttype">',
+  ]
+
+  for object_type in FILTER_TYPES:
+    selected = ' selected' if object_type == selected_type else ''
+    output.append('<option value="%s"%s>%s</option>' %
+                  (object_type, selected, object_type))
+
+  output.extend([
+    '</select><br>',
+    '<input type="text" name="nfiltramin" value="%s"> &lt; RA (HH:MM:SS) &lt; '
+    '<input type="text" name="nfiltramax" value="%s"><br>' %
+    (escape(filter_text['filtramin']), escape(filter_text['filtramax'])),
+    '<input type="text" name="nfiltdecmin" value="%s"> &lt; DEC (DD:MM:SS) &lt; '
+    '<input type="text" name="nfiltdecmax" value="%s"><br>' %
+    (escape(filter_text['filtdecmin']), escape(filter_text['filtdecmax'])),
+    '<input type="text" name="nfiltlodmin" value="%s"> &lt; '
+    '(Days since last observed) &lt; '
+    '<input type="text" name="nfiltlodmax" value="%s">' %
+    (escape(filter_text['filtlodmin']), escape(filter_text['filtlodmax'])),
+    '</p>',
+  ])
+
+  output.extend(page_navigation(page, pages))
+  output.extend([
+    '<p>Page %d of %d: &nbsp; Click on a column heading to sort by that column.</p>' %
+    (page, pages),
+    '<table border="1">',
+    '<tr>',
+    '<th%s><button type="submit" name="nsortby" value="ObjID">ObjID</button></th>' %
+    (' bgcolor="#ffff6d"' if sortby == 'OBJID' else ''),
+    '<th>Name</th>',
+    '<th%s><button type="submit" name="nsortby" value="ObjRA">ObjRA</button></th>' %
+    (' bgcolor="#ffff6d"' if sortby == 'OBJRA' else ''),
+    '<th%s><button type="submit" name="nsortby" value="ObjDec">ObjDec</button></th>' %
+    (' bgcolor="#ffff6d"' if sortby == 'OBJDEC' else ''),
+    '<th>ObjEpoch</th><th>filters</th><th>exptimes</th><th>XY</th>',
+    '<th>type</th><th>Period</th>',
+    '<th%s><button type="submit" name="nsortby" value="LastObs">LastObs</button></th>' %
+    (' bgcolor="#ffff6d"' if sortby == 'LASTOBS' else ''),
+    '<th>Comment</th>',
+    '</tr>',
+  ])
+
+  for obj in olist:
+    edit_url = '../secure/nobjedit?' + urlencode({'ObjID': obj.ObjID})
+    output.extend([
+      '<tr>',
+      '<td><a href="%s">%s</a></td>' % (escape(edit_url), escape(obj.ObjID)),
+      '<td>%s</td>' % escape(obj.name),
+      '<td>%s</td>' % escape(obj.ObjRA),
+      '<td>%s</td>' % escape(obj.ObjDec),
+      '<td>%s</td>' % escape(obj.ObjEpoch),
+      '<td>%s</td>' % escape(obj.filtnames),
+      '<td>%s</td>' % escape(obj.exptimes),
+      '<td>%s</td>' % escape(obj.XYpos),
+      '<td>%s</td>' % escape(obj.type),
+      '<td>%s</td>' % escape(obj.period),
+      '<td>%s<br>%s</td>' % (escape(obj.LastObsDate), escape(obj.LastObsTime)),
+      '<td>%s</td>' % escape(obj.comment),
+      '</tr>',
+    ])
+
+  output.extend(['</table>'])
+  output.extend(page_navigation(page, pages))
+  output.append('<input type="hidden" name="sortby" value="%s">' % escape(sortby))
+  for name, value in filter_text.items():
+    output.append('<input type="hidden" name="%s" value="%s">' %
+                  (escape(name), escape(value)))
+  output.extend([
+    '<input type="hidden" name="opage" value="%d">' % page,
+    '</form>',
+    'Go to <a href="../bncstat">Observing Status Page</a>.',
+    '</body>',
+    '</html>',
+  ])
+  return '\n'.join(output)
+
+
+def main():
+  form = read_form()
+  sortby = (form.get('nsortby') or form.get('sortby') or 'OBJID').strip().upper()
+  if sortby not in SORT_FIELDS:
+    sortby = 'OBJID'
+
+  filtid, filtid_text = filter_value(form, 'filtid', 'string')
+  filttype, filttype_text = filter_value(form, 'filttype', 'string')
+  framin, framin_text = filter_value(form, 'filtramin', 'sex')
+  framax, framax_text = filter_value(form, 'filtramax', 'sex')
+  fdecmin, fdecmin_text = filter_value(form, 'filtdecmin', 'sex')
+  fdecmax, fdecmax_text = filter_value(form, 'filtdecmax', 'sex')
+  flodmin, flodmin_text = filter_value(form, 'filtlodmin', 'float')
+  flodmax, flodmax_text = filter_value(form, 'filtlodmax', 'float')
+
+  try:
+    old_page = int(form.get('opage', '1'))
+  except ValueError:
+    old_page = 1
+
+  if form.get('action') == 'Redraw':
+    page = 1
   else:
-    raise ValueError("Wrong data type")
-
-def pfilt(name, tp='sex', sticky=0):
-  """Parse ctx.locals for 'name' and 'nname' data, and return an appropriate value.
-     tp='sex' for sexagesimal format, or 'float' or 'string'. If 'sticky' is true, then
-     a null value for the new field will revert to the last good value, otherwise the 
-     return value will be None.
-  """
-  try:
-    newf = getattr(ctx.locals, 'n'+name)
-  except:
-    newf = None
-    setattr(ctx.locals, 'n'+name, None)
-  try:
-    oldf = getattr(ctx.locals, name)
-  except:
-    oldf = None
-  if newf:
-    if (not oldf) or (newf == oldf):
-      try:
-        val = pval(newf, tp)
-      except:
-        setattr(ctx.locals, 'n'+name, None)
-        val = None
+    requested_page = form.get('cpage', '1')
+    if requested_page == 'Next':
+      page = old_page + 1
+    elif requested_page == 'Prev':
+      page = old_page - 1
     else:
       try:
-        val = pval(newf, tp)
-      except:
-        setattr(ctx.locals, 'n'+name, None)
-        try:
-          val = pval(oldf, tp)
-        except:
-          val = None
-  else:
-    setattr(ctx.locals, 'n'+name, None)
-    val = None
-    if sticky:
-      try:
-        val = pval(oldf, tp)
-        setattr(ctx.locals, 'n'+name, oldf)
-      except:
-        val = None
-    
-  return val
+        page = int(requested_page)
+      except ValueError:
+        page = 1
+  page = max(page, 1)
 
+  query = {
+    'id': filtid, 'type': filttype, 'sortby': sortby,
+    'ramin': framin, 'ramax': framax,
+    'decmin': fdecmin, 'decmax': fdecmax,
+    'lodmin': flodmin, 'lodmax': flodmax,
+  }
+  olist = objects.filtobjects(page=page, pagesize=PAGESIZE, **query)
+  nobjects = objects.filtobjects(count=1, **query)
 
-ctx = SimpleContext('.')
-
-form = cgi.FieldStorage()
-ctx.locals.form = form
-for name in list(form.keys()):
-  if isinstance(form[name], list):
-    value = []
-    for elem in form[name]:
-      value.append(elem.value)
-  else:
-    value = form[name].value
-#  print("ctx.locals."+name+"="+repr(value)+"\n<br>")
-  setattr(ctx.locals, name, value)
-
-
-#for k in dir(ctx.locals):
-#  print(k, ':', getattr(ctx.locals, k), "<br>\n")
-
-sortby = pfilt('sortby', tp='string', sticky=1)
-filtid = pfilt('filtid', tp='string')
-filttype = pfilt('filttype', tp='string')
-framin = pfilt('filtramin', tp='sex')
-framax = pfilt('filtramax', tp='sex')
-fdecmin = pfilt('filtdecmin', tp='sex')
-fdecmax = pfilt('filtdecmax', tp='sex')
-flodmin = pfilt('filtlodmin', tp='float')
-flodmax = pfilt('filtlodmax', tp='float')
-
-try:
-  opage = int(ctx.locals.opage)
-except:
-  opage = 1
-
-try:
-  action = ctx.locals.action
-except:
-  action = None
-
-if (not sortby) or (sortby.strip().upper() == "NONE"):
-  sortby = "ObjID"
-ctx.locals.sortby = sortby.strip().upper()
-
-templ = ctx.load_template('aobjlist.html')
-
-if action != "Redraw":
-  try:
-    page = ctx.locals.cpage
-    if page == "Next":
-      page = opage+1
-    elif page == "Prev":
-      page = opage-1
+  for obj in olist:
+    if obj.LastObs:
+      obj.LastObsDate = time.strftime('%Y/%m/%d', time.gmtime(obj.LastObs))
+      obj.LastObsTime = time.strftime('%H:%M:%S', time.gmtime(obj.LastObs))
     else:
-      page=int(page)
-  except:
-    page=1
-else:
-  page=1
+      obj.LastObsDate = ''
+      obj.LastObsTime = ''
+    obj.filtnames, obj.exptimes = objects.pls(obj.sublist)
 
-olist = objects.filtobjects(id=filtid, type=filttype, sortby=sortby,
-                            ramin=framin, ramax=framax,
-                            decmin=fdecmin, decmax=fdecmax,
-                            lodmin=flodmin, lodmax=flodmax,
-                            page=page, pagesize=pagesize)
-nobjects = objects.filtobjects(id=filtid, type=filttype, sortby=sortby,
-                               ramin=framin, ramax=framax,
-                               decmin=fdecmin, decmax=fdecmax,
-                               lodmin=flodmin, lodmax=flodmax,
-                               count=1)
+  filter_text = {
+    'filtid': filtid_text, 'filttype': filttype_text,
+    'filtramin': framin_text, 'filtramax': framax_text,
+    'filtdecmin': fdecmin_text, 'filtdecmax': fdecmax_text,
+    'filtlodmin': flodmin_text, 'filtlodmax': flodmax_text,
+  }
+  print('Content-Type: text/html')
+  print()
+  print(render_page(olist, nobjects, page, sortby, filter_text))
 
 
-for ob in olist:
-  if ob.LastObs:
-    ob.LastObsDate = time.strftime("%Y/%m/%d",time.gmtime(ob.LastObs))
-    ob.LastObsTime = time.strftime("%H:%M:%S",time.gmtime(ob.LastObs))
-  else:
-    ob.LastObsDate = ""
-    ob.LastObsTime = ""
-  ob.filtnames,ob.exptimes = objects.pls(ob.sublist)
-
-ctx.locals.cpage = page
-ctx.locals.opage = page
-ctx.locals.pages = nobjects // pagesize + 1
-ctx.locals.olist = olist
-ctx.locals.filttypelist = ['ALL', 'PLANET', 'IMAGE', 'SN', 'PHOTOM', 'STORE', 'REF', 'FOCUS']
-
-templ.to_html(ctx)
-
-ctx.flush_content()
+if __name__ == '__main__':
+  main()
