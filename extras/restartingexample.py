@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/home/observer/.conda/envs/teljoy/bin/python
 
 import controller, time, random, sys, traceback
 
@@ -134,11 +134,11 @@ class Driver(controller.Driver):
 
     # Set the length of a frame, in cycles of the controller clock freqency. In
     # this example a frame is 100ms, or 1/10th of a second:
-    configuration.mc_frame_period = self.host.clock_frequency / 10
+    configuration.mc_frame_period = self.host.clock_frequency // 10
 
     # Set the pulse width, in cycles of the controller clock frequency. In this
     # example the pulse width is 1ms:
-    configuration.mc_pulse_width = self.host.clock_frequency / 1000
+    configuration.mc_pulse_width = self.host.clock_frequency // 1000
 
     # Invert all the GPIO inputs, so they are active when pulled low:
     for pin in configuration.pins[0:48]:
@@ -163,7 +163,7 @@ class Driver(controller.Driver):
     # Set the guider sample interval, in cycles of the controller clock frequency.
     # In this example, the guider is polled every 1ms, giving a maximum of
     # 100 for the guider value in each 100ms frame:
-    self.mc_guider_counter_divider = self.host.clock_frequency / 1000
+    self.mc_guider_counter_divider = self.host.clock_frequency // 1000
 
     # Each guider value is multiplied by a fractional scale factor to get
     # the number of steps. The resulting value then has a maximum applied before

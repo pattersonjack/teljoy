@@ -170,6 +170,7 @@ class CurrentPosition(correct.CalcPosition):
     if motion.motors.Frozen or motion.limits.HWLimit or (motion.motors.RA.padlog != 0) or (motion.motors.DEC.padlog != 0):
       self.posviolate = True
 
+    # guidelog is an integer step count. Division now intentionally retains fractional arcseconds (Python 2 discarded these).
     with motion.motors.RA.lock:
       # account for paddle and non-sid. motion, and limit encounters}
       self.RaA += motion.motors.RA.padlog / 20
