@@ -18,7 +18,8 @@ SITE = 'NZ'
 DEFPORT = 9696
 
 if SITE == 'NZ':
-  DEFHOST = 'cynosure.canterbury.ac.nz'
+  # Use the new control computer directly until the cynosure DNS record is updated.
+  DEFHOST = '132.181.49.156'
   DEFURL = 'PYRO:Teljoy@%s:%d' % (DEFHOST, DEFPORT)
   KEYFILE = '~observer/teljoy.pyrokey'
 elif SITE == 'PERTH':
