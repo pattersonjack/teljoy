@@ -35,6 +35,14 @@ from globals import *
 import usbcon
 import digio
 
+
+def _hardware_reset_failed(reset_failure):
+  """Handle the transfer ending as the controller resets its USB connection."""
+  logger.warning("Controller hardware reset transfer did not complete: %s" %
+    reset_failure.getErrorMessage())
+  return None
+
+
 if __name__ == '__main__':
   logger.info('* Resetting controller hardware with hardware_reset()')
   try:
@@ -43,8 +51,12 @@ if __name__ == '__main__':
     logger.critical("Can't open USB device for telescope controller. Make sure that the controller " +
                     "is plugged in, and that there isn't another copy of teljoy running.")
     sys.exit(-1)
-  instance.hardware_reset()
-  time.sleep(0.5)
+  try:
+    reset_deferred = instance.hardware_reset()
+    reset_deferred.addErrback(_hardware_reset_failed)
+    time.sleep(0.5)
+  finally:
+    instance._close()
   del instance
   time.sleep(0.5)
 
