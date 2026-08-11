@@ -1,4 +1,4 @@
-#!/usr/bin/python -i
+#!/usr/bin/env -S python -i
 
 """Telescope control software using a 'velocity streaming' controller, where every frame
    (typically 50ms) a pair of integers are read by the control hardware, and the control hardware
