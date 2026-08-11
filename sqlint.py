@@ -91,10 +91,11 @@ create table teljoy.objects (
 );
 
 create table teljoy.objtemp (
-        ObjID varchar(10),
+        ObjID varchar(10) NOT NULL,
         fObjRA double,
         fObjDec double,
-        LastMod timestamp
+        LastMod timestamp,
+        PRIMARY KEY (ObjID)
 );
 
 create table teljoy.tjbox (

@@ -75,7 +75,7 @@ def page_navigation(page, pages):
 
 
 def render_page(olist, nobjects, page, sortby, filter_text):
-  pages = nobjects // PAGESIZE + 1
+  pages = max(1, (nobjects + PAGESIZE - 1) // PAGESIZE)
   selected_type = filter_text['filttype'].upper() or 'ALL'
   output = [
     '<html>',
