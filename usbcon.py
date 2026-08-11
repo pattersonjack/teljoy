@@ -144,6 +144,7 @@ class Driver(controller.Driver):
     self.limits = limits
     self.counters = None    # Last values read from the controller counters
     self.lock = threading.RLock()
+    self._shutdown_complete = threading.Event()
 
   def get_expected_controller_version(self):
     """This code needs controller version 0.7
@@ -453,7 +454,8 @@ class Driver(controller.Driver):
       self.lock.acquire()
       logger.debug('acq in state_changed() success')
       d = self.host.get_exception()
-      d.addCallback(self._get_exception_completed)
+      d.addCallbacks(self._get_exception_completed, self._shutdown_status_failed,
+        errbackArgs=('exception details',))
 
   def enable_guider(self):
     """Calls self.host.enable_guider with locking. Turns on the autoguider.
@@ -489,7 +491,8 @@ class Driver(controller.Driver):
     self.lock.acquire()
     logger.debug('acq in get_exception_completed() success')
     d = self.host.get_counters()
-    d.addCallback(self._get_counters_before_stop_completed)
+    d.addCallbacks(self._get_counters_before_stop_completed, self._shutdown_status_failed,
+      errbackArgs=('final counters',))
 
   def _get_counters_before_stop_completed(self, counters):
     self.lock.release()
@@ -498,6 +501,7 @@ class Driver(controller.Driver):
        counters.reference_frame_number,
        counters.a_total_steps,
        counters.b_total_steps))
+    self._shutdown_complete.set()
 
     # The controller--in 0.7--doesn't update these counters during shutdown, and after clearing
     # an exception the counters and frame number are reset. A future update will make the total
@@ -541,6 +545,20 @@ class Driver(controller.Driver):
       db -= fvb
 
     self.dropped_frames = (da,db)    # Need to adjust the position by this amount before restarting the queue.
+
+  def _shutdown_status_failed(self, status_failure, description):
+    """Finish shutdown if optional diagnostic reads fail after the controller stopped."""
+    self.lock.release()
+    logger.error("Unable to read controller %s during shutdown: %s" % (
+      description, status_failure.getErrorMessage()))
+    self._shutdown_complete.set()
+    return None
+
+  def _shutdown_command_failed(self, shutdown_failure):
+    """Handle a failed shutdown write; the state interrupt remains authoritative."""
+    logger.warning("Controller shutdown command transfer did not complete: %s; "
+      "waiting for controller state confirmation." % shutdown_failure.getErrorMessage())
+    return None
 
   def inputs_changed(self, inputs):
     """Called whenever any of the 'notifiable' binary inputs have changed state.
@@ -586,11 +604,19 @@ class Driver(controller.Driver):
     """Do a clean shutdown, acquiring the lock first to make sure there's no transfer happening.
     """
     logger.debug('acq in shutdown:')
-    self.lock.acquire()
-    logger.debug('acq in shutdown() success')
-    self.host.shutdown()
-    self.lock.release()
+    with self.lock:
+      logger.debug('acq in shutdown() success')
+      if self.host._last_state in (controller.TC_STATE_STOPPING, controller.TC_STATE_EXCEPTION):
+        return None
+      self._shutdown_complete.clear()
+      shutdown_deferred = self.host.shutdown()
+      shutdown_deferred.addErrback(self._shutdown_command_failed)
     logger.debug('release in shutdown()')
+    return shutdown_deferred
+
+  def wait_for_shutdown(self, timeout):
+    """Wait until the controller reports its final exception state and counters."""
+    return self._shutdown_complete.wait(timeout)
 
   def run(self):
     """Enter the polling loop. The default poller (returned by select.poll) can
@@ -601,4 +627,3 @@ class Driver(controller.Driver):
        by the run() method. If stop() had no arguments, the run() method returns normally.
     """
     controller.run(driver=self)
-

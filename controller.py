@@ -1007,6 +1007,7 @@ class Controller(object):
     """Called in event handlers or timers to stop the event loop."""
     self._running = False
     self._run_failure = run_failure
+    self._context.interruptEventHandler()
 
   def set_outputs(self, outputs):
     """Sets the specified GPIO bits high on the controller card.

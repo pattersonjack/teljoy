@@ -30,7 +30,6 @@ import sys
 import time
 import signal
 import atexit
-import traceback
 
 from globals import *
 import usbcon
@@ -64,6 +63,8 @@ import pyephem
 
 SIGNAL_HANDLERS = {}
 CLEANUP_FUNCTION = None
+
+CONTROLLER_SHUTDOWN_TIMEOUT = 15.0
 
 
 
@@ -103,7 +104,7 @@ def cleanup():
   """Registers to be called just before exit by the exit handler.
      Waits for any hand paddle motion or slews to finish before exiting.
   """
-  logger.info("Exiting teljoy.py program - here's why: %s" % traceback.print_exc())
+  logger.info("Exiting teljoy.py program.")
   try:
     digio.DomeStop()
     while motion.motors.Moving or motion.motors.Paddling:
@@ -112,10 +113,30 @@ def cleanup():
   finally:
     detevent.fastloop.shutdown()
     detevent.slowloop.shutdown()
-    motion.motors.Driver.shutdown()
+
+    controller_thread = motion.intthread
+    controller_driver = motion.motors.Driver
+    try:
+      controller_driver.shutdown()
+    except Exception:
+      logger.exception("Unable to request a ramped controller shutdown.")
+    else:
+      if not controller_driver.wait_for_shutdown(CONTROLLER_SHUTDOWN_TIMEOUT):
+        logger.critical("Timed out waiting for the controller to confirm hardware shutdown.")
+
     detevent.fastthread.join()
     detevent.slowthread.join()
-    time.sleep(1)
+
+    try:
+      motion.StopController()
+    except Exception:
+      logger.exception("Unable to stop the USB controller event loop.")
+    controller_thread.join(CONTROLLER_SHUTDOWN_TIMEOUT)
+    if controller_thread.is_alive():
+      logger.critical("USB controller thread did not exit during shutdown.")
+    else:
+      logger.info("USB controller thread stopped cleanly.")
+
     logger.info("Teljoy shut down.")
 
 

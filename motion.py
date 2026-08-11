@@ -32,6 +32,7 @@ import usbcon
 
 
 intthread = None
+_controller_stop = threading.Event()
 
 log = []
 
@@ -41,10 +42,18 @@ def KickStart():
   """
   global intthread
   logger.info("Kickstarting motion control thread")
+  _controller_stop.clear()
   #Start the queue handler thread to keep the queue full
   intthread = threading.Thread(target=RunQueue, name='USB-controller-thread')
   intthread.daemon = True
   intthread.start()
+
+
+def StopController():
+  """Stop the USB controller loop without allowing RunQueue to restart it."""
+  _controller_stop.set()
+  if motors is not None and motors.Driver is not None:
+    motors.Driver.stop()
 
 
 class Axis(object):
@@ -542,13 +551,13 @@ class MotorControl(object):
 def RunQueue():
   """Starts the motion control queue running.
 
-     This function only exits if stop() was called with an exception, indicating an
-     unrecoverable error that means the main program must exit.
+     This function exits if stop() was called with an exception, or when
+     StopController() requests a clean program shutdown.
   """
   global motors
   global limits
   limits = usbcon.LimitStatus()
-  while True:
+  while not _controller_stop.is_set():
     try:
       oldmotors = motors    # Keep a  reference to the old object around, in case it takes time to clean itself up on exit
       motors = MotorControl(limits=limits)
@@ -558,7 +567,8 @@ def RunQueue():
       print("controller.Controller.stop() was called with an exception:")
       traceback.print_exc()
       break
-    logger.info("Restarting controller.run().")
+    if not _controller_stop.is_set():
+      logger.info("Restarting controller.run().")
 
 
 #Main init routine for unit
