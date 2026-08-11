@@ -1,4 +1,4 @@
-#!/usr/bin/python -Wignore
+#!/home/observer/.conda/envs/teljoy/bin/python
 
 import cgi
 import math
@@ -61,7 +61,7 @@ def data(s):
 def since(tm):
   """Return a string containing the time in seconds since the epoch supplied.
   """
-  return `int(time.time()-tm)`+' sec'
+  return repr(int(time.time()-tm))+' sec'
 
 
 
@@ -162,19 +162,18 @@ def Exits():
 
 
 if __name__ == '__main__':
-  print "Content-Type: text/html\n\n"
-  print HTMLheader
+  print("Content-Type: text/html")
+  print()
+  print(HTMLheader)
 
   msg = tjclient.Init()
   status = tjclient.status
   if not status.connected:
-    print "Can't connect - is Teljoy running?"
-#    print "Error message from Teljoy client: %s" % msg
+    print("Can't connect - is Teljoy running?")
+#    print("Error message from Teljoy client: %s" % msg)
 
-  print data(TJParams(status))                    #Teljoy parameters
-  print "<br>"
-  print AddObjURL(status)
-  print Exits()
-  print HTMLtrailer
-
-
+  print(data(TJParams(status)))                    #Teljoy parameters
+  print("<br>")
+  print(AddObjURL(status))
+  print(Exits())
+  print(HTMLtrailer)

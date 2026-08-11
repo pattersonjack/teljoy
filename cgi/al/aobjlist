@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/home/observer/.conda/envs/teljoy/bin/python
 
 import cgi
 from albatross import SimpleContext
@@ -6,8 +6,8 @@ import copy
 import time
 import sys
 
-print 'Content-Type: text/html'
-print
+print('Content-Type: text/html')
+print()
 
 sys.path.append('/home/observer/')
 
@@ -29,7 +29,7 @@ def pval(s, tp):
   elif tp=='string':
     return s.strip().upper()
   else:
-    raise ValueError, "Wrong data type"
+    raise ValueError("Wrong data type")
 
 def pfilt(name, tp='sex', sticky=0):
   """Parse ctx.locals for 'name' and 'nname' data, and return an appropriate value.
@@ -79,19 +79,19 @@ ctx = SimpleContext('.')
 
 form = cgi.FieldStorage()
 ctx.locals.form = form
-for name in form.keys():
-  if type(form[name]) is type([]):
+for name in list(form.keys()):
+  if isinstance(form[name], list):
     value = []
     for elem in form[name]:
       value.append(elem.value)
   else:
     value = form[name].value
-#  print "ctx.locals."+name+"="+`value`+"\n<br>"
+#  print("ctx.locals."+name+"="+repr(value)+"\n<br>")
   setattr(ctx.locals, name, value)
 
 
 #for k in dir(ctx.locals):
-#  print k,':', getattr(ctx.locals, k),"<br>\n"
+#  print(k, ':', getattr(ctx.locals, k), "<br>\n")
 
 sortby = pfilt('sortby', tp='string', sticky=1)
 filtid = pfilt('filtid', tp='string')
@@ -119,7 +119,7 @@ ctx.locals.sortby = sortby.strip().upper()
 
 templ = ctx.load_template('aobjlist.html')
 
-if action <> "Redraw":
+if action != "Redraw":
   try:
     page = ctx.locals.cpage
     if page == "Next":
@@ -156,7 +156,7 @@ for ob in olist:
 
 ctx.locals.cpage = page
 ctx.locals.opage = page
-ctx.locals.pages = nobjects/pagesize + 1
+ctx.locals.pages = nobjects // pagesize + 1
 ctx.locals.olist = olist
 ctx.locals.filttypelist = ['ALL', 'PLANET', 'IMAGE', 'SN', 'PHOTOM', 'STORE', 'REF', 'FOCUS']
 

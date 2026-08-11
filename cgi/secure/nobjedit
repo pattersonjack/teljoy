@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/home/observer/.conda/envs/teljoy/bin/python
 
 import cgi
 import html

@@ -59,7 +59,7 @@ class Object:
         self.ObjID = str
         return
       else:
-        c = curs.fetchallDict()[0]
+        c = curs.fetchall()[0]
       self.ObjID = c['ObjID'].strip()
       self.name = c['name']
 #     self.name = c['name'].strip()
@@ -271,7 +271,7 @@ def allobjects(curs=None):
   if not curs:
     curs = db.cursor()
   curs.execute("""select ObjID from teljoy.objects""")
-  c = curs.fetchallDict()
+  c = curs.fetchall()
   olist = []
   for row in c:
     olist.append(Object(row['ObjID']))
@@ -296,7 +296,7 @@ def filtobjects(curs=None,
                "on (teljoy.objects.ObjID = teljoy.objtemp.ObjID) " +
                "where (teljoy.objtemp.ObjID is NULL) or (teljoy.objects.LastMod > teljoy.objtemp.LastMod) ")
   if curs.rowcount:
-    ulist = curs.fetchallDict()
+    ulist = curs.fetchall()
     for c in ulist:        
       fObjRA = globals.stringsex(c['ObjRA'])
       fObjDec = globals.stringsex(c['ObjDec'])
@@ -375,7 +375,7 @@ def filtobjects(curs=None,
     curs.execute(squery)
     if curs.rowcount:
       try:
-        return int(curs.fetchallDict()[0]['num'])
+        return int(curs.fetchall()[0]['num'])
       except:
         return 0
     else:
@@ -401,7 +401,7 @@ def filtobjects(curs=None,
 
   olist = []
   if curs.rowcount:
-    ulist = curs.fetchallDict()
+    ulist = curs.fetchall()
     for c in ulist:        
       olist.append(Object(c['ObjID']))
   return olist
