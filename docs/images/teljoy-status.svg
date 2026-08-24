@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200" role="img" aria-labelledby="title desc">
+  <title id="title">Teljoy telescope status page</title>
+  <desc id="desc">A local rendering of the Teljoy status CGI page in a browser window.</desc>
+  <defs>
+    <linearGradient id="desktop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#11151c"/>
+      <stop offset="1" stop-color="#10231f"/>
+    </linearGradient>
+    <linearGradient id="page" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#101720"/>
+      <stop offset="1" stop-color="#0b1118"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1b2633"/>
+      <stop offset="1" stop-color="#131c26"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".5"/>
+    </filter>
+    <clipPath id="windowClip">
+      <rect x="34" y="84" width="832" height="1078" rx="24"/>
+    </clipPath>
+  </defs>
+
+  <rect width="900" height="1200" fill="url(#desktop)"/>
+  <circle cx="110" cy="1080" r="250" fill="#2fb787" opacity=".06"/>
+  <circle cx="820" cy="210" r="180" fill="#5ba8ff" opacity=".045"/>
+
+  <rect width="900" height="50" fill="#17191e"/>
+  <text x="24" y="32" fill="#f0f1f3" font-family="system-ui, sans-serif" font-size="18" font-weight="650">Activities</text>
+  <text x="450" y="32" fill="#f0f1f3" font-family="system-ui, sans-serif" font-size="18" text-anchor="middle">Firefox</text>
+  <text x="812" y="32" fill="#d5d7dc" font-family="system-ui, sans-serif" font-size="16" text-anchor="end">Aug 25 · 20:10</text>
+  <circle cx="846" cy="25" r="5" fill="#d5d7dc"/>
+  <path d="M864 29h18M867 24h12M871 19h4" stroke="#d5d7dc" stroke-width="2" stroke-linecap="round"/>
+
+  <g filter="url(#shadow)">
+    <rect x="34" y="84" width="832" height="1078" rx="24" fill="url(#page)"/>
+    <g clip-path="url(#windowClip)">
+      <rect x="34" y="84" width="832" height="124" fill="#f1f3f5"/>
+      <rect x="34" y="84" width="832" height="58" fill="#dfe3e8"/>
+      <rect x="58" y="96" width="374" height="46" rx="10" fill="#f8f9fb"/>
+      <rect x="34" y="208" width="832" height="954" fill="#08090b"/>
+    </g>
+  </g>
+
+  <circle cx="82" cy="118" r="7" fill="#39b980"/>
+  <text x="102" y="124" fill="#252a31" font-family="system-ui, sans-serif" font-size="18" font-weight="650">B&amp;C Telescope Status</text>
+  <path d="M404 112l10 10M414 112l-10 10" stroke="#6f7780" stroke-width="2"/>
+  <path d="M820 107l12 12M832 107l-12 12" stroke="#555d66" stroke-width="2" stroke-linecap="round"/>
+
+  <path d="M67 187l-10-9 10-9M102 169l10 9-10 9" fill="none" stroke="#5e6670" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="183" y="157" width="624" height="43" rx="21" fill="#fff" stroke="#c8cdd3"/>
+  <text x="207" y="185" fill="#4b535d" font-family="system-ui, sans-serif" font-size="16">http://127.0.0.1/cgi-bin/bncstat</text>
+
+  <g transform="translate(0,-30)" font-family="'Times New Roman', 'DejaVu Serif', serif" fill="#f2f2ef">
+    <text x="70" y="294" font-size="32" font-weight="700" text-decoration="underline">Teljoy Status</text>
+
+    <rect x="70" y="310" width="720" height="720" fill="none" stroke="#f2f2ef" stroke-width="3"/>
+    <path d="M310 310v720 M70 355h720 M70 400h720 M70 445h720 M70 490h720 M70 535h720 M70 580h720 M70 625h720 M70 670h720 M70 715h720 M70 760h720 M70 805h720 M70 850h720 M70 895h720 M70 940h720 M70 985h720" fill="none" stroke="#f2f2ef" stroke-width="3"/>
+
+    <g font-size="21" font-weight="700">
+      <text x="550" y="341" text-anchor="middle">Value</text>
+      <text x="190" y="386" text-anchor="middle">Object ID</text><text x="324" y="386">HD 153919</text>
+      <text x="190" y="431" text-anchor="middle">RA</text><text x="324" y="431">17:03:56.8</text>
+      <text x="190" y="476" text-anchor="middle">Dec</text><text x="324" y="476">-37:50:38.9</text>
+      <text x="190" y="521" text-anchor="middle">Epoch</text><text x="324" y="521">2000.0</text>
+      <text x="190" y="566" text-anchor="middle">Nonsid Track</text><text x="324" y="566">RA: 0, DEC: 0 arcsec/second</text>
+      <text x="190" y="611" text-anchor="middle">Alt</text><text x="324" y="611">80:10:14.1</text>
+      <text x="190" y="656" text-anchor="middle">Azi</text><text x="324" y="656">304:55:34.4</text>
+      <text x="190" y="701" text-anchor="middle">LST</text><text x="324" y="701">17:46:38.1</text>
+      <text x="190" y="746" text-anchor="middle">Hour Angle</text><text x="324" y="746">-00:40:50.9</text>
+      <text x="190" y="791" text-anchor="middle">Airmass</text><text x="324" y="791">1.015</text>
+      <text x="190" y="836" text-anchor="middle">Dome Azi</text><text x="324" y="836">334</text>
+      <text x="190" y="881" text-anchor="middle">Flags</text>
+      <text x="190" y="926" text-anchor="middle">Limits</text><text x="324" y="926">None</text>
+      <text x="190" y="971" text-anchor="middle">UT Date</text><text x="324" y="971">2026-08-25</text>
+      <text x="190" y="1016" text-anchor="middle">UT Time</text><text x="324" y="1016">08:10:19</text>
+    </g>
+
+    <text x="70" y="1080" font-size="20" font-weight="700">Click <tspan fill="#c9a7ff" text-decoration="underline">HERE</tspan> to add the current object to the database.</text>
+    <text x="70" y="1125" font-size="20" font-weight="700">Go to <tspan fill="#c9a7ff" text-decoration="underline">Objects Database</tspan></text>
+  </g>
+</svg>

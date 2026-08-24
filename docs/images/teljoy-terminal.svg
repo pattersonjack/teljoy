@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200" role="img" aria-labelledby="title desc">
+  <title id="title">Teljoy running in a RHEL terminal</title>
+  <desc id="desc">A rendering of the Teljoy interactive telescope-control session in a GNOME-style terminal window.</desc>
+  <defs>
+    <linearGradient id="desktop" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#11151c"/>
+      <stop offset="1" stop-color="#220d13"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity=".55"/>
+    </filter>
+    <clipPath id="windowClip">
+      <rect x="34" y="84" width="832" height="1078" rx="24"/>
+    </clipPath>
+  </defs>
+
+  <rect width="900" height="1200" fill="url(#desktop)"/>
+  <circle cx="796" cy="1110" r="240" fill="#b71935" opacity=".08"/>
+  <circle cx="95" cy="155" r="190" fill="#e52d43" opacity=".05"/>
+
+  <rect width="900" height="50" fill="#17191e"/>
+  <text x="24" y="32" fill="#f0f1f3" font-family="system-ui, sans-serif" font-size="18" font-weight="650">Activities</text>
+  <text x="450" y="32" fill="#f0f1f3" font-family="system-ui, sans-serif" font-size="18" text-anchor="middle">Terminal</text>
+  <text x="812" y="32" fill="#d5d7dc" font-family="system-ui, sans-serif" font-size="16" text-anchor="end">Aug 25 · 20:10</text>
+  <circle cx="846" cy="25" r="5" fill="#d5d7dc"/>
+  <path d="M864 29h18M867 24h12M871 19h4" stroke="#d5d7dc" stroke-width="2" stroke-linecap="round"/>
+
+  <g filter="url(#shadow)">
+    <rect x="34" y="84" width="832" height="1078" rx="24" fill="#171b21"/>
+    <g clip-path="url(#windowClip)">
+      <rect x="34" y="84" width="832" height="76" fill="#292d34"/>
+      <rect x="34" y="158" width="832" height="2" fill="#3d424b"/>
+    </g>
+  </g>
+
+  <rect x="58" y="105" width="38" height="34" rx="7" fill="#3b414b"/>
+  <path d="M68 117h18v13H68zM71 121l4 3-4 3M77 128h6" fill="none" stroke="#eff2f5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="450" y="132" fill="#eef0f3" font-family="system-ui, sans-serif" font-size="19" font-weight="600" text-anchor="middle">observer@c079gq: ~/teljoy</text>
+  <circle cx="794" cy="122" r="15" fill="#3b414b"/>
+  <path d="M787 122h14" stroke="#d8dbe0" stroke-width="2"/>
+  <circle cx="836" cy="122" r="15" fill="#3b414b"/>
+  <path d="M830 116l12 12M842 116l-12 12" stroke="#d8dbe0" stroke-width="2"/>
+
+  <g font-family="SFMono-Regular, Consolas, 'Liberation Mono', monospace" font-size="18.5">
+    <text x="67" y="205" fill="#79d49b">(teljoy) [observer@c079gq teljoy]$ <tspan fill="#f4f5f7">python -i teljoy.py</tspan></text>
+
+    <text x="67" y="250" fill="#74b9ff">teljoy-INFO</text>
+    <text x="212" y="250" fill="#dfe5ea">* Resetting controller hardware</text>
+    <text x="67" y="284" fill="#74b9ff">teljoy-INFO</text>
+    <text x="212" y="284" fill="#dfe5ea">Kickstarting motion control thread</text>
+    <text x="67" y="318" fill="#74b9ff">teljoy-INFO</text>
+    <text x="212" y="318" fill="#dfe5ea">* Initialising (0, 7)</text>
+    <text x="67" y="352" fill="#74b9ff">teljoy-INFO</text>
+    <text x="212" y="352" fill="#dfe5ea">MCU Firmware Version: (0, 7)</text>
+    <text x="67" y="386" fill="#74b9ff">teljoy-INFO</text>
+    <text x="212" y="386" fill="#dfe5ea">FPGA Firmware Version: (0, 7)</text>
+    <text x="67" y="420" fill="#74b9ff">teljoy-INFO</text>
+    <text x="212" y="420" fill="#dfe5ea">Clock Frequency: 12000000</text>
+    <text x="67" y="454" fill="#74b9ff">teljoy-INFO</text>
+    <text x="212" y="454" fill="#dfe5ea">Queue Capacity: 64</text>
+
+    <text x="67" y="506" fill="#74b9ff">teljoy-INFO</text>
+    <text x="212" y="506" fill="#dfe5ea">* Successfully Configured</text>
+    <text x="67" y="540" fill="#74b9ff">teljoy-INFO</text>
+    <text x="212" y="540" fill="#dfe5ea">&lt;StateDetails TC_STATE_RUNNING&gt;</text>
+    <text x="67" y="574" fill="#74b9ff">teljoy-INFO</text>
+    <text x="212" y="574" fill="#dfe5ea">Event loop 'FastLoop' started</text>
+    <text x="67" y="608" fill="#74b9ff">teljoy-INFO</text>
+    <text x="212" y="608" fill="#dfe5ea">Event loop 'SlowLoop' started</text>
+    <text x="67" y="642" fill="#74b9ff">teljoy-INFO</text>
+    <text x="212" y="642" fill="#dfe5ea">Starting teljoy.rpc Pyro4 server</text>
+    <text x="67" y="676" fill="#74b9ff">teljoy-INFO</text>
+    <text x="212" y="676" fill="#dfe5ea">Serving Teljoy connections</text>
+
+    <g font-size="15.5">
+      <text x="67" y="732" fill="#ffd166">&gt;&gt;&gt; <tspan fill="#f4f5f7">jump("HD 153919")</tspan></text>
+      <text x="67" y="770" fill="#c9d1d9">Found positions:</text>
+      <text x="67" y="806" fill="#c9d1d9" font-size="14">RA=255:59:11.6, DEC=-37:50:38.9, Source=Simbad (CDS, via client/server)</text>
+      <text x="67" y="842" fill="#c9d1d9">Using position from 'Simbad (CDS, via client/server)'</text>
+      <text x="67" y="878" fill="#c9d1d9" font-size="14">Jumping to: {hd 153919}: Time=[UT:06:58:40 LST:16:34:47],</text>
+      <text x="67" y="908" fill="#c9d1d9" font-size="14">Pos=[17:03:56.8,-37:50:39 -&gt; (17:05:45.8,-37:52:23)]</text>
+      <text x="67" y="944" fill="#c9d1d9">Moving dome.</text>
+      <text x="67" y="990" fill="#ffd166">&gt;&gt;&gt;</text>
+    </g>
+    <rect x="110" y="971" width="10" height="24" fill="#a8e6cf">
+      <animate attributeName="opacity" values="1;.15;1" dur="1.3s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+</svg>
