@@ -1,9 +1,7 @@
 # Teljoy -- B&C 0.6m Telescope Control
 
 <p align="center">
-  <img src="docs/images/teljoy-terminal.svg" width="33%" alt="Teljoy running in a RHEL terminal">
-  <img src="docs/images/b&c-telescope.jpg" width="33%" alt="Boller &amp; Chivens 0.6 m telescope at Ōtehīwai Mt John Observatory at night">
-  <img src="docs/images/teljoy-status.svg" width="33%" alt="Teljoy telescope status page in a local browser">
+  <img src="docs/images/teljoy-terminal.svg" width="33%" alt="Teljoy running in a RHEL terminal"><img src="docs/images/b&c-telescope.jpg" width="33%" alt="Boller &amp; Chivens 0.6 m telescope at Ōtehīwai Mt John Observatory at night"><img src="docs/images/teljoy-status.svg" width="33%" alt="Teljoy telescope status page in a local browser">
 </p>
 
 Teljoy is a telescope and dome control system used at both the University of Canterbury's Boller & Chivens 0.6m telescope and the Perth-Lowell Telescope at Perth Observatory. This fork contains the current Mt John configuration, including the Python 3 modernisation of the previous Python 2 system.
